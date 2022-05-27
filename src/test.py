@@ -150,21 +150,21 @@ def atoms(formula):
         return atom1.union(atom2)
 ##############################################################################
 
-# Função para retornar se a formula é satisfatível 
+# Função para verificar se a formula é satisfativel e em qual valoração
 def sat_check(formula,atomicas,valoracao):
-    if atomicas is Empty :
-        if truth_value(formula,valoracao)==True :
+    if len(atomicas) == 0:
+        if truth_value(formula,valoracao):
             return valoracao
         return False
     nova_atomica=atomicas.pop()
-    val1 = valoracao.union({(nova_atomica,True)})
-    val2 = valoracao.union({(nova_atomica,False)})
-    result1=sat_check(formula,atomicas,val1)
+    val1= unionDic(valoracao, {nova_atomica: True})
+    val2= unionDic(valoracao, {nova_atomica: False})
+    result1=sat_check(formula, atomicas.copy(),val1)
     if result1 != False:
         return result1
-    return sat_check(formula,atomicas,val2)
-
+    return sat_check(formula, atomicas.copy(),val2)
 ##############################################################################
+
 from enum import Flag
 def truth_value(formula, valoracao):
     """Determines the truth value of a formula in an valoracao (valuation).
@@ -178,8 +178,6 @@ def truth_value(formula, valoracao):
         return None
     if isinstance(formula, Not):
         val = truth_value(formula.inner, valoracao)
-        if val is None:
-            return None
         return not val
     if isinstance(formula, Implies):
         atom1 = truth_value(formula.left, valoracao)
@@ -207,7 +205,7 @@ def truth_value(formula, valoracao):
         return False
 ##############################################################################
 
-# Função ded força bruta para satisfatibilidade
+# Função de força bruta para satisfatibilidade
 def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
@@ -215,7 +213,12 @@ def satisfiability_brute_force(formula):
     atomicas = atoms(formula)
     valoracao = {}
     return sat_check(formula,atomicas,valoracao)
+##############################################################################
 
+# União de dicionários
+def unionDic(dic1, dic2):
+    return (dic1 | dic2)
+##############################################################################
 
 formula1 = Atom('p')  # p
 formula2 = Atom('q')  # q
@@ -232,8 +235,9 @@ val={
         Atom('q'): False
     }
 
-my_formula= Implies(Atom('p'),Atom('q'))
+#Testes de funções 
+#for atom in atoms(formula1)
+#print(atom)
 #truth_value(my_formula,val)
-satisfiability_brute_force(my_formula)
-
+#satisfiability_brute_force(formula3)
     
