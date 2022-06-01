@@ -1,5 +1,10 @@
 import os
+import csv
 
-arq = open(R'C:\Users\Luciano\Desktop\Workspace\Python\Projeto I\Arquivos - Pacientes\column_bin_3a_2p.csv','r')
-cont = arq.read()
-print(cont)
+with open ('column_bin_3a_2p.csv', 'r') as arquivo:
+    dados = csv.reader(arquivo)
+
+""" print do csv
+    for dado in dados:
+        print(dado)
+"""       
