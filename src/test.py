@@ -12,6 +12,8 @@ from queue import Empty
 from re import A
 import string
 from xmlrpc.client import boolean
+import pandas as pd
+
 
 class Formula:
     def __init__(self):
@@ -100,8 +102,36 @@ class Or(Formula):
 
     def __hash__(self):
         return hash((hash(self.left), hash(self.right), 'or'))
+##############################################################################
 
+def and_all(list_formulas):
+    """
+    Returns a BIG AND formula from a list of formulas
+    For example, if list_formulas is [Atom('1'), Atom('p'), Atom('r')], it returns
+    And(And(Atom('1'), Atom('p')), Atom('r')).
+    :param list_formulas: a list of formulas
+    :return: And formula
+    """
+    first_formula = list_formulas[0]
+    del list_formulas[0]
+    for formula in list_formulas:
+        first_formula = And(first_formula, formula)
+    return first_formula
+##############################################################################
 
+def or_all(list_formulas):
+    """
+    Returns a BIG OR of formulas from a list of formulas.
+    For example, if list_formulas is [Atom('1'), Atom('p'), Atom('r')], it returns
+    Or(Or(Atom('1'), Atom('p')), Atom('r')).
+    :param list_formulas: a list of formulas
+    :return: Or formula
+    """
+    first_formula = list_formulas[0]
+    del list_formulas[0]
+    for formula in list_formulas:
+        first_formula = Or(first_formula, formula)
+    return first_formula
 
 ##############################################################################
 
@@ -220,24 +250,58 @@ def unionDic(dic1, dic2):
     return (dic1 | dic2)
 ##############################################################################
 
-formula1 = Atom('p')  # p
-formula2 = Atom('q')  # q
-formula3 = And(formula1, formula2)  # (p /\ q)
-formula4 = And(Atom('p'), Atom('s'))  # (p /\ s)
-formula5 = Not(And(Atom('p'), Atom('s')))  # (¬(p /\ s))
-formula6 = Or(Not(And(Atom('p'), Atom('s'))), Atom('q'))  # ((¬(p /\ s)) v q)
-formula7 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Atom('r')))  # ((¬(p /\ s)) -> (q /\ r))
-formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('p'), Atom('s'))))) # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
-formula9 = And(formula1, Not(formula1))
+#Função para percorrer os arquivos
 
-val={
-        Atom('p'): True,
-        Atom('q'): False
-    }
+##############################################################################
+
+#restricão 1
+
+##############################################################################
+
+#restricão 2
+
+##############################################################################
+#(xPI≤42.09,1,p ∨ xPI≤70.62,1,p ∨ xPI≤80.61,1,p ∨ xGS≤37.89,1,n ∨ xGS≤57.55,1,n)
+#(xPI≤42.09,2,p ∨ xPI≤70.62,2,p ∨ xPI≤80.61,2,p ∨ xGS≤37.89,2,n ∨ xGS≤57.55,2,n)
+#(xPI≤42.09,3,p ∨ xPI≤70.62,3,p ∨ xPI≤80.61,3,p ∨ xGS≤37.89,3,n ∨ xGS≤57.55,3,n)
+#(xPI≤42.09,4,p ∨ xPI≤70.62,4,p ∨ xPI≤80.61,4,p ∨ xGS≤37.89,4,n ∨ xGS≤57.55,4,n)
+#restricão 3
+
+#def rule3(arquivo):
+
+     # 'a' representa qual o atributo
+#    for a in range(length(arquivo)):
+        # 'i' representa o numero da regra
+#        for i in length():
+            # 'j' representa qual o paciente
+#            for j in range(length(arquivo)):   
+##############################################################################
+
+#restricão 4
+
+##############################################################################
+
+#restricão 5
+
+##############################################################################
+
+#formula1 = Atom('p')  # p
+#formula2 = Atom('q')  # q
+#formula3 = And(formula1, formula2)  # (p /\ q)
+#formula4 = And(Atom('p'), Atom('s'))  # (p /\ s)
+#formula5 = Not(And(Atom('p'), Atom('s')))  # (¬(p /\ s))
+#formula6 = Or(Not(And(Atom('p'), Atom('s'))), Atom('q'))  # ((¬(p /\ s)) v q)
+#formula7 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Atom('r')))  # ((¬(p /\ s)) -> (q /\ r))
+#formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('p'), Atom('s'))))) # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
+#formula9 = And(formula1, Not(formula1))
+
+#val={
+#        Atom('p'): True,
+#        Atom('q'): False
+#    }
 
 #Testes de funções 
 #for atom in atoms(formula1)
 #print(atom)
 #truth_value(my_formula,val)
 #satisfiability_brute_force(formula3)
-    
