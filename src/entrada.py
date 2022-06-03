@@ -1,10 +1,8 @@
 import os
-import csv
+import pandas as pd
+import ferramentas
 
-with open ('column_bin_3a_2p.csv', 'r') as arquivo:
-    dados = csv.reader(arquivo)
+  #altere o endereço de acordo com localização do arquivo
+df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_3p.csv')  
 
-""" print do csv
-    for dado in dados:
-        print(dado)
-"""       
+print(df)
