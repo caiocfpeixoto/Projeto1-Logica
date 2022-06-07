@@ -2,6 +2,7 @@
 # pois existe um bug para acessar as pastas que 
 # eu não estou sabendo resolver :p
 from ast import If, Not
+import csv
 from ctypes import Union
 from ctypes.wintypes import ATOM
 from asyncio import format_helpers
@@ -12,9 +13,7 @@ from queue import Empty
 from re import A
 import string
 from xmlrpc.client import boolean
-import pandas as pd
-
-
+import pandas as pd1
 class Formula:
     def __init__(self):
         pass
@@ -267,22 +266,32 @@ def unionDic(dic1, dic2):
 #(xPI≤42.09,4,p ∨ xPI≤70.62,4,p ∨ xPI≤80.61,4,p ∨ xGS≤37.89,4,n ∨ xGS≤57.55,4,n)
 #restricão 3
 
-#def rule3(arquivo):
-
-     # 'a' representa qual o atributo
-#    for a in range(length(arquivo)):
-        # 'i' representa o numero da regra
-#        for i in length():
-            # 'j' representa qual o paciente
-#            for j in range(length(arquivo)):   
+def rule3(arquivo):
+    #'a' representa qual o atributo
+    for a in range(length(arquivo)):
+    #'i' representa o numero da regra
+       for i in length():
+           # 'j' representa qual o paciente
+           for j in range(length(arquivo)):   
+               return
 ##############################################################################
 
 #restricão 4
 
 ##############################################################################
-
+#(c1,1 ∨ c2,1 ∨ c3,1 ∨ c4,1)
+#(c1,2 ∨ c2,2 ∨ c3,2 ∨ c4,2)
 #restricão 5
 
+def ret5(arquivo,regra):
+    list_atom =[]
+    for j in range(len(arquivo)):
+        for i in range(len(regra)):
+            list_atom.append('C'+str(i+1)+'_'+str(j+1))
+    return or_all(list_atom)
+arquivo=[1,0,1],[0,0,0]
+m=[0,1,2,3]
+print(ret5(arquivo,m))
 ##############################################################################
 
 #formula1 = Atom('p')  # p
@@ -305,3 +314,17 @@ def unionDic(dic1, dic2):
 #print(atom)
 #truth_value(my_formula,val)
 #satisfiability_brute_force(formula3)
+
+
+# with open('C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv', mode='r') as arq:
+#     leitor = csv.reader(arq,delimiter=',')
+#     linhas = 0
+#     for coluna in leitor:
+#        if linhas ==0:
+#            print(f'Coluna: {"".join(coluna)}')
+#            linhas +=1
+#        else:
+#            print('\tElemento {coluna[0]}')
+
+# csv = pd.reader_csv(r'C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv')
+#print(ret5(leitor,3))
