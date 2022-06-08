@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from ferramentas.semantics import and_all, or_all
+from ferramentas.semantics import *
 
 
   #altere o endereço de acordo com localização do arquivo
