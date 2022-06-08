@@ -18,7 +18,19 @@ def pegar_comparador(arquivo):
     return tabela
 """
 #def ret1(arquivo):
-    
+
+def ret5(arquivo,regra):
+    list_rows=[]
+    for j in range(len(arquivo)):
+      list_atom =[]
+      for i in range(len(regra)):
+        list_atom.append('C'+str(i+1)+''+str(j+1))
+      list=or_all(list_atom)
+      list_rows.append(list)
+    return and_all(list_rows)
+arquivo=[1,0,1],[0,0,0]
+m=[0,1,2,3]
+print(ret5(arquivo,m))
 
 
                
