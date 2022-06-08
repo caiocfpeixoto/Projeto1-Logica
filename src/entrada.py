@@ -1,6 +1,7 @@
 import os
 import pandas as pd
-import ferramentas
+from ferramentas.semantics import and_all, or_all
+
 
   #altere o endereço de acordo com localização do arquivo
 df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_2p.csv')  
