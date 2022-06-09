@@ -8,18 +8,20 @@ df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivo
 
 
 
-print(df)
-"""
-def pegar_comparador(arquivo):
-    tabela = []
-    for linha in range(len(arquivo)):
-        for coluna in range(len(arquivo)):
-            if coluna != 'P':
-                tabela = arquivo[0][coluna]
-    return tabela
-"""
+#print(df)
+
+list_tab = []
+for colunas in df.columns:
+    
+    list_tab.append(colunas)
+
+#print(list_tab[0])
+
+#print(pegar_comparador(df))
+
 #def ret1(arquivo):
 
+'''
 def ret5(arquivo,regra):
     list_rows=[]
     for j in range(len(arquivo)):
@@ -32,6 +34,7 @@ def ret5(arquivo,regra):
 arquivo=[1,0,1],[0,0,0]
 m=[0,1,2,3]
 print(ret5(arquivo,m))
+'''
 
 
                
