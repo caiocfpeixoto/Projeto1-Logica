@@ -266,17 +266,35 @@ def unionDic(dic1, dic2):
 #(xPI≤42.09,4,p ∨ xPI≤70.62,4,p ∨ xPI≤80.61,4,p ∨ xGS≤37.89,4,n ∨ xGS≤57.55,4,n)
 #restricão 3
 
-def rule3(arquivo):
-    #'a' representa qual o atributo
-    for a in range(length(arquivo)):
-    #'i' representa o numero da regra
-       for i in length():
-           # 'j' representa qual o paciente
-           for j in range(length(arquivo)):   
-               return
+def ret3(arquivo,regra):
+    list_rows=[]
+    for i in range(len(regra)):
+            list_atom=[]
+            for a in range(len(arquivo)-1):  
+                list_atom.append('X'+str(arquivo[0][a])+'_'+ str(i+1)+'_'+ str())
+            list=or_all(list_atom)
+            list_rows.append(list)
+    return and_all(list_rows)        
 ##############################################################################
-
+#(xP I≤42.09,1,p → ¬c1,1) ∧ (xP I≤70.62,1,p → ¬c1,1) ∧ (xP I≤80.61,1,n → ¬c1,1) ∧ (xGS≤37.89,1,p → ¬c1,1 ) ∧ (xGS≤57.55,1,n → ¬c1,1)
+#(xP I≤42.09,1,p → ¬c1,2) ∧ (xP I≤70.62,1,p → ¬c1,2) ∧ (xP I≤80.61,1,p → ¬c1,2) ∧ (xGS≤37.89,1,p → ¬c1,2) ∧ (xGS≤57.55,1,p → ¬c1,2)
+#(xP I≤42.09,2,p → ¬c2,1) ∧ (xP I≤70.62,2,p → ¬c2,1) ∧ (xP I≤80.61,2,n → ¬c2,1) ∧ (xGS≤37.89,2,p → ¬c2,1 ) ∧ (xGS≤57.55,2,n → ¬c2,1)
+#(xP I≤42.09,2,p → ¬c2,2) ∧ (xP I≤70.62,2,p → ¬c2,2) ∧ (xP I≤80.61,2,p → ¬c2,2) ∧ (xGS≤37.89,2,p → ¬c2,2) ∧ (xGS≤57.55,2,p → ¬c2,2)
+#(xP I≤42.09,3,p → ¬c3,1) ∧ (xP I≤70.62,3,p → ¬c3,1) ∧ (xP I≤80.61,3,n → ¬c3,1) ∧ (xGS≤37.89,3,p → ¬c3,1 ) ∧ (xGS≤57.55,3,n → ¬c3,1)
+#(xP I≤42.09,3,p → ¬c3,2) ∧ (xP I≤70.62,3,p → ¬c3,2) ∧ (xP I≤80.61,3,p → ¬c3,2) ∧ (xGS≤37.89,3,p → ¬c3,2) ∧ (xGS≤57.55,3,p → ¬c3,2)
+#(xP I≤42.09,4,p → ¬c4,1) ∧ (xP I≤70.62,4,p → ¬c4,1) ∧ (xP I≤80.61,4,n → ¬c4,1) ∧ (xGS≤37.89,4,p → ¬c4,1 ) ∧ (xGS≤57.55,4,n → ¬c4,1)
+#(xP I≤42.09,4,p → ¬c4,2) ∧ (xP I≤70.62,4,p → ¬c4,2) ∧ (xP I≤80.61,4,p → ¬c4,2) ∧ (xGS≤37.89,4,p → ¬c4,2) ∧ (xGS≤57.55,4,p → ¬c4,2
 #restricão 4
+def ret4(arquivo,regra):
+    list_rows=[]
+    for i in range(len(regra)):
+        for j in range(len(arquivo)):
+            list_atom=[]
+            for a in range(len(arquivo)-1):
+                list_atom.append(Implies(Atom('X'+ str(arquivo[0][a])+'_'+str(i+1)+'_',),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
+                list=and_all(list_atom)
+                list_rows.append(list)
+    return and_all(list_rows)
 
 ##############################################################################
 #(c1,1 ∨ c2,1 ∨ c3,1 ∨ c4,1)
@@ -284,14 +302,17 @@ def rule3(arquivo):
 #restricão 5
 
 def ret5(arquivo,regra):
-    list_atom =[]
+    list_rows=[]
     for j in range(len(arquivo)):
-        for i in range(len(regra)):
-            list_atom.append('C'+str(i+1)+'_'+str(j+1))
-    return or_all(list_atom)
-arquivo=[1,0,1],[0,0,0]
+      list_atom =[]
+      for i in range(len(regra)):
+        list_atom.append('C'+str(i+1)+'_'+str(j+1))
+      list=or_all(list_atom)
+      list_rows.append(list)  
+    return and_all(list_rows)
+arquivo=['Pi<=a', 'Pi<=b', 'P'],['1','0','1'],['0','0','0']
 m=[0,1,2,3]
-print(ret5(arquivo,m))
+print(ret4(arquivo,m))
 ##############################################################################
 
 #formula1 = Atom('p')  # p
