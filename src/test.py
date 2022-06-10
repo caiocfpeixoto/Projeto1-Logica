@@ -249,12 +249,53 @@ def unionDic(dic1, dic2):
     return (dic1 | dic2)
 ##############################################################################
 
-#Função para percorrer os arquivos
+#Checagem na situação em que a não está em i
+def att_check(arquivo):
+  if 'PI' in arquivo:
+    #print(f'PI está presente -> {arquivo[n]}')
+    check = 'PI'
+   
+  if 'GS' in arquivo:
+    #print(f'GS está presente -> {arquivo[n]}') 
+    check = 'GS'
+
+  if 'PT' in arquivo:
+     #print(f'PT está presente -> {arquivo[n]}')  
+    check = 'PT'
+
+  if 'LA' in arquivo:
+    #print(f'LA está presente -> {arquivo[n]}')
+    check = 'LA'
+
+  if 'SS' in arquivo:
+    #print(f'SS está presente -> {arquivo[n]}')
+    check = 'SS'
+
+  if 'RP' in arquivo:
+    #print(f'RP está presente -> {arquivo[n]}')  
+    check = 'RP'
+  
+  return check   
+
+#(X_a_i_p) V (X_a_i_n) V (X_a_i_s)
+#df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
 
 ##############################################################################
 
 #restricão 1
-
+def ret1(arquivo, regra):
+  list_row = []
+  for atributo in (range(len(arquivo)-1)):
+    for i in range(len(regra)):
+      if att_check(arquivo[atributo]) in regra[i] :
+        if regra[i] == arquivo[atributo]:
+          list_row.append(f'X_{arquivo[atributo]}_{str(i+1)}_p')
+        elif (regra[i] != arquivo[atributo]):
+          list_row.append(f'X_{arquivo[atributo]}_{str(i+1)}_n')
+      else:
+        list_row.append(f'X_{arquivo[atributo]}_{str(i+1)}_s')  
+      
+  return list_row 
 ##############################################################################
 
 #restricão 2
@@ -315,6 +356,28 @@ m=[0,1,2,3]
 print(ret4(arquivo,m))
 ##############################################################################
 
+#Solução
+def patologia_solucao(arquivo,regra):
+  final_formula= And(
+        And(
+            And(
+                ret1(arquivo,regra),
+                ret2(arquivo,regra)
+            ),
+            And(
+                ret3(arquivo,regra),
+                ret4(arquivo,regra)
+            ),
+        ),
+        ret5(arquivo,regra)
+    )
+  solution=(satisfiability_brute_force(final_formula))
+  if solution:
+    for j in range(len(arquivo)):
+      print('Paciente'+ str(j+1)+'tem patologia')
+  else:
+      print('Paciente'+str(j+1)+'não tem patalogia')
+#############################################################################
 #formula1 = Atom('p')  # p
 #formula2 = Atom('q')  # q
 #formula3 = And(formula1, formula2)  # (p /\ q)
