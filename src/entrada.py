@@ -71,10 +71,10 @@ def ret2(arquivo, regra):
   for i in (range(len(regra))):
     for a in (range(len(arquivo)-1)):
       if att_check(regra[i]) in arquivo[a]:
-        list_row.append(f'notX_{arquivo[a]}_{str(i+1)}_s')
+        list_row.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
       else:
-        list_row.append(f'X_{arquivo[a]}_{str(i+1)}_s')
-  return list_row      
+        list_row.append((f'X_{arquivo[a]}_{str(i+1)}_s'))
+  return or_all(list_row)      
 
 '''
 def ret3(arquivo,regra):
