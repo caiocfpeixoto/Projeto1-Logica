@@ -1,4 +1,5 @@
 import os
+from sre_constants import AT
 import pandas as pd
 from ferramentas.semantics import *
 
@@ -8,8 +9,9 @@ from ferramentas.semantics import *
 df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_2p.csv')  
 #regra3a_2p  {['PI > 54.92]'}
 #regra3a_3p  {['PI > 70.62','GS > 57.55']}
-
-regra_temp = ['PI > 70.62', 'GS > 57.55']
+#regra3a_4p ['PI > 42.09', 'LA > 39.63', 'GS > 37.89'] tem algo de errado com a regra, talvez ajude na modelagem
+regra1 = ['PI > 54.92']
+regra2 = ['PI > 70.62', 'GS > 57.55']
 
 #print(df)
 
@@ -45,17 +47,34 @@ def att_check(arquivo):
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
 def ret1(arquivo, regra):
   list_row = []
-  for atributo in (range(len(arquivo)-1)):
+  for a in (range(len(arquivo)-1)):
     for i in range(len(regra)):
-      if att_check(arquivo[atributo]) in regra[i] :
-        if regra[i] == arquivo[atributo]:
-          list_row.append(f'X_{arquivo[atributo]}_{str(i+1)}_p')
-        elif (regra[i] != arquivo[atributo]):
-          list_row.append(f'X_{arquivo[atributo]}_{str(i+1)}_n')
+      if att_check(arquivo[a]) in regra[i] :
+        if regra[i] == arquivo[a]:
+          list_row.append(f'X_{arquivo[a]}_{str(i+1)}_p')
+        elif (regra[i] != arquivo[a]):
+          list_row.append(f'X_{arquivo[a]}_{str(i+1)}_n')
       else:
-        list_row.append(f'X_{arquivo[atributo]}_{str(i+1)}_s')  
+        list_row.append(f'X_{arquivo[a]}_{str(i+1)}_s')  
       
-  return list_row 
+  return list_row
+
+'''
+(¬xP I≤42.09,1,s V ¬xP I≤70.62,1,s V ¬xP I≤80.61,1,s V ¬xGS≤37.89,1,s V ¬xGS≤57.55,1,s)
+(¬xP I≤42.09,2,s V ¬xP I≤70.62,2,s V ¬xP I≤80.61,2,s V ¬xGS≤37.89,2,s V ¬xGS≤57.55,2,s)
+(¬xP I≤42.09,3,s V ¬xP I≤70.62,3,s V ¬xP I≤80.61,3,s V ¬xGS≤37.89,3,s V ¬xGS≤57.55,3,s)
+(¬xP I≤42.09,4,s V¬xP I≤70.62,4,s V ¬xP I≤80.61,4,s V ¬xGS≤37.89,4,s V ¬xGS≤57.55,4,s)
+'''
+#df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
+def ret2(arquivo, regra):
+  list_row=[]
+  for i in (range(len(regra))):
+    for a in (range(len(arquivo)-1)):
+      if att_check(regra[i]) in arquivo[a]:
+        list_row.append(f'notX_{arquivo[a]}_{str(i+1)}_s')
+      else:
+        list_row.append(f'X_{arquivo[a]}_{str(i+1)}_s')
+  return list_row      
 
 '''
 def ret3(arquivo,regra):
