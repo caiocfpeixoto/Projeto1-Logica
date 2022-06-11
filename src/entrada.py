@@ -16,33 +16,38 @@ regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
 
 #print(df)
 
-#Checagem na situação em que a não está em i
-def att_check(arquivo):
-  if 'PI' in arquivo:
-    #print(f'PI está presente -> {arquivo[n]}')
-    check = 'PI'
-   
-  if 'GS' in arquivo:
-    #print(f'GS está presente -> {arquivo[n]}') 
-    check = 'GS'
+#Conta as regras
+#m = contagem(df.columns)
+def contagem(arquivo):
+  list = [0, 0, 0, 0, 0, 0]
+  m = 0
+  for a in range(len(arquivo)):
+    if 'PI' in arquivo[a]:
+      if list[0] == 0:
+        m += 1
+        list[0] += 1
+    if 'GS' in arquivo[a]:
+      if list[1] == 0:
+        m += 1
+        list[1] += 1
+    if 'PT' in arquivo[a]:
+      if list[2] == 0:
+        m += 1 
+        list[2] += 1  
+    if 'LA' in arquivo[a]:
+      if list[3] == 0:
+        m += 1
+        list[3] += 1
+    if 'SS' in arquivo[a]:
+      if list[4] == 0:
+        m += 1  
+        list[4] += 1
+    if 'RP' in arquivo[a]:
+      if list[5] == 0:
+        m += 1 
+        list[5] += 1 
 
-  if 'PT' in arquivo:
-     #print(f'PT está presente -> {arquivo[n]}')  
-    check = 'PT'
-
-  if 'LA' in arquivo:
-    #print(f'LA está presente -> {arquivo[n]}')
-    check = 'LA'
-
-  if 'SS' in arquivo:
-    #print(f'SS está presente -> {arquivo[n]}')
-    check = 'SS'
-
-  if 'RP' in arquivo:
-    #print(f'RP está presente -> {arquivo[n]}')  
-    check = 'RP'
-  
-  return check   
+  return m
 
 #(X_a_i_p) V (X_a_i_n) V (X_a_i_s)
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
