@@ -14,7 +14,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\cesar.peixoto\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 #import pandas as pd1
 class Formula:
     def __init__(self):
@@ -322,14 +322,12 @@ def ret3(arquivo,regra):
     for i in range(len(regra)):
             list_atom=[]
             for a in range(len(arquivo)-1):
-                x= range(len(arquivo))
-                if arquivo[a][x]=='0': 
                     if regra[i] == arquivo[a]:
-                        list_atom.append('X'+str(arquivo[0][a])+'_'+ str(i+1)+'_'+'p')
+                        list_atom.append('X_'+str(arquivo[a])+'_'+ str(i+1)+'_'+'p')
                     elif (regra[i] != arquivo[a]):
-                        list_atom.append('X'+str(arquivo[0][a])+'_'+ str(i+1)+'_'+'n')
+                        list_atom.append('X_'+str(arquivo[a])+'_'+ str(i+1)+'_'+'n')
                     else:
-                        list_atom.append('X'+str(arquivo[0][a])+'_'+ str(i+1)+'_'+'s')
+                        list_atom.append('X_'+str(arquivo[a])+'_'+ str(i+1)+'_'+'s')
             list=or_all(list_atom)
             list_rows.append(list)
     return and_all(list_rows)        
@@ -348,15 +346,13 @@ def ret4(arquivo,regra):
     for i in range(len(regra)):
         for j in range(len(arquivo)):
             list_atom=[]
-            x= range(len(arquivo))
-            if arquivo[j][x]=='1':
-                for a in range(len(arquivo)-1):
-                    if (regra[i] == arquivo[a]):
-                        list_atom.append(Implies(Atom('X'+ str(arquivo[0][a])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) ) 
-                    elif (regra[i] != arquivo[a]):
-                        list_atom.append(Implies(Atom('X'+ str(arquivo[0][a])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
-                    list=and_all(list_atom)
-                    list_rows.append(list)
+            for a in range(len(arquivo)-1):
+                if (regra[i] == arquivo[a]):
+                    list_atom.append(Implies(Atom('X_'+ str(arquivo[a])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) ) 
+                elif (regra[i] != arquivo[a]):
+                    list_atom.append(Implies(Atom('X_'+ str(arquivo[a])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
+                list=and_all(list_atom)
+                list_rows.append(list)
     return and_all(list_rows)
 
 ##############################################################################
@@ -367,17 +363,14 @@ def ret4(arquivo,regra):
 def ret5(arquivo,regra):
     list_rows=[]
     for j in range(len(arquivo)):
-        x= range(len(arquivo))
-        if arquivo[j][x]=='1':
-            list_atom =[]
-            for i in range(len(regra)):
-                list_atom.append('C'+str(i+1)+'_'+str(j+1))
-            list=or_all(list_atom)
-            list_rows.append(list)  
+        list_atom =[]
+        for i in range(len(regra)):
+            list_atom.append('C_'+str(i+1)+'_'+str(j+1))
+        list=or_all(list_atom)
+        list_rows.append(list)  
     return and_all(list_rows)
-arquivo={['PI > 70.62','GS > 57.55']}
-m = ['PI > 70.62', 'GS > 57.55']
-print(ret1(df.columns,m))
+m = [0,1 ]
+print(ret3(df.columns,m))
 ##############################################################################
 
 #Solução
@@ -405,7 +398,7 @@ def patologia_solucao(arquivo,regra):
             for a in range(len(arquivo)):
                 if (regra[i] == arquivo[a]):
                     list_atom.append(str(arquivo[0][a]))
-    return print(list_atom+ u'\U+21D2'+'P')
+    return print(list_atom+'P')
   else:
       print('Paciente'+str(j+1)+'não tem patalogia')
 
