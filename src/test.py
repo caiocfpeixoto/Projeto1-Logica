@@ -299,18 +299,18 @@ def ret1(arquivo, regra):
         list_aux = []
         if aux == 0:
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
           
           
         if aux == 1:
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
             
         if aux == 2:
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
         
         list = and_all(list_aux) 
@@ -331,7 +331,7 @@ def ret2(arquivo, regra):
   for i in (range(len(regra))):
     list_atom = []
     for a in (range(len(arquivo)-1)):
-      list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
+      list_atom.append(Not(Atom(f'X_{arquivo[a]}_{str(i+1)}_s')))
     list = or_all(list_atom)
     list_row.append(list)
   
@@ -401,29 +401,28 @@ def patologia_solucao(arquivo,regra):
   final_formula= And(
         And(
             And(
-                ret1(arquivo,regra),
-                ret2(arquivo,regra)
+                Atom(ret1(arquivo,regra)),
+                Atom(ret2(arquivo,regra))
             ),
             And(
-                ret3(arquivo,regra),
-                ret4(arquivo,regra)
+                Atom(ret3(arquivo,regra)),
+                Atom(ret4(arquivo,regra))
             ),
         ),
-        ret5(arquivo,regra)
+        Atom(ret5(arquivo,regra))
     )
   solution=(satisfiability_brute_force(final_formula))
   if solution:
     for j in range(len(arquivo)):
-      print('Paciente'+ str(j+1)+'tem patologia')
-    for i in range(len(regra)):
-        for j in range(len(arquivo)):
-            list_atom=[]
-            for a in range(len(arquivo)):
-                if (regra[i] == arquivo[a]):
-                    list_atom.append(str(arquivo[0][a]))
-    return print(list_atom+'P')
+        print('Paciente '+ str(j+1)+' tem patologia')
+        for i in range(len(regra)):
+                list_atom=[]
+                for a in range(len(arquivo)):
+                        list_atom.append(str(arquivo[a]))
+        break
+    return print(str(list_atom)+'⇒'+'P')
   else:
-      print('Paciente'+str(j+1)+'não tem patalogia')
+      print('Paciente'+' '+ str(j+1) +' '+'não tem patalogia')
 regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
 print(patologia_solucao(df.columns,regra3))
 #############################################################################
