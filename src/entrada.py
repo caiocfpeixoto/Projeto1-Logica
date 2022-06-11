@@ -46,7 +46,8 @@ def contagem(arquivo):
       if list[5] == 0:
         m += 1 
         list[5] += 1 
-
+  #if :
+  
   return m
 
 #def pato(arquivo):
@@ -98,7 +99,7 @@ def ret1(arquivo, m):
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
 def ret2(arquivo, m):
   list_row=[]
-  for i in (range(len(m))):
+  for i in (range(m)):
     list_atom = []
     for a in (range(len(arquivo)-1)):
       list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
@@ -136,11 +137,11 @@ def ret4(arquivo,regra):
                 list_rows.append(list)
     return and_all(list_rows)
 
-def ret5(arquivo,regra):
+def ret5(arquivo,m):
     list_rows=[]
     for j in range(len(arquivo)):
         list_atom =[]
-        for i in range(len(regra)):
+        for i in range(m):
             list_atom.append('C'+str(i+1)+'_'+str(j+1))
         list=or_all(list_atom)
         list_rows.append(list)
