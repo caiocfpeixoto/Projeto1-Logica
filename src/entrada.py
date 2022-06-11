@@ -8,7 +8,7 @@ from ferramentas.semantics import *
 #usar o df como padrão
 df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_2p.csv')  
 #regra3a_2p  {['PI > 54.92]'}
-#regra3a_3p  {['PI > 70.62','GS > 57.55']}
+#regra3a_3p  {['PI > 70.62','GS > 57.55']}o número é definido pelos atributos diferentes
 #regra3a_4p ['PI > 42.09', 'LA > 39.63', 'GS > 37.89'] tem algo de errado com a regra, talvez ajude na modelagem
 regra1 = ['PI > 54.92']
 regra2 = ['PI > 70.62', 'GS > 57.55']
@@ -48,29 +48,38 @@ def att_check(arquivo):
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
 def ret1(arquivo, regra):
   list_row = []
-  for a in (range(len(arquivo)-1)):
-    list_atom = []
-    for i in range(len(regra)):
-      if att_check(arquivo[a]) in regra[i] :
-        if regra[i] == arquivo[a]:
-          list_atom.append(f'X_{arquivo[a]}_{str(i+1)}_p')
-          list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_n'))
-          list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
+  for i in range(len(regra)):  
+    list_atoms = []
+    for a in (range(len(arquivo)-1)):
+      list_atom=[]
+      for aux in range(3):
+        list_aux = []
+        if aux == 0:
+          list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          
+          
+        if aux == 1:
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+            
+        if aux == 2:
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
         
-        elif (regra[i] != arquivo[a]):
-          list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_p'))
-          list_atom.append((f'X_{arquivo[a]}_{str(i+1)}_n'))
-          list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
-      
-      else:
-        list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_p'))  
-        list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_n'))
-        list_atom.append((f'X_{arquivo[a]}_{str(i+1)}_s'))
-    
-    list = and_all(list_atom)
-    list_row.append(list)
+        list = and_all(list_aux) 
+        list_atom.append(list)
+        
+      list = or_all(list_atom) 
+      list_atoms.append(list)
 
-  return or_all(list_row)
+    list = and_all(list_atoms)
+    list_row.append(list)  
+
+  return and_all(list_row)
 
 '''
 (¬xP I≤42.09,1,s V ¬xP I≤70.62,1,s V ¬xP I≤80.61,1,s V ¬xGS≤37.89,1,s V ¬xGS≤57.55,1,s)
@@ -80,14 +89,15 @@ def ret1(arquivo, regra):
 '''
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
 def ret2(arquivo, regra):
-  list_atom=[]
+  list_row=[]
   for i in (range(len(regra))):
+    list_atom = []
     for a in (range(len(arquivo)-1)):
-      if att_check(regra[i]) in arquivo[a]:
-        list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
-      else:
-        list_atom.append((f'X_{arquivo[a]}_{str(i+1)}_s'))
-  return or_all(list_atom)       
+      list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
+    list = or_all(list_atom)
+    list_row.append(list)
+  
+  return and_all(list_row)       
 
 def ret3(arquivo,regra):
     list_atoms=[]
@@ -119,7 +129,7 @@ def ret5(arquivo,regra):
       list=or_all(list_atom)
       list_atoms.append(list)
     return and_all(list_atoms)
-    
+
 #arquivo=[1,0,1],[0,0,0]
 #m=[0,1,2,3]
 #print(ret5(arquivo,m))

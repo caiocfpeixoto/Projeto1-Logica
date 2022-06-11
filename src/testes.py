@@ -5,3 +5,4 @@ df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivo
 
 print(entrada.ret1(df.columns, entrada.regra2))
 #print(entrada.ret2(df.columns, entrada.regra2))
+
