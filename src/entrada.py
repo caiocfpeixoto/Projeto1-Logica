@@ -49,11 +49,14 @@ def contagem(arquivo):
 
   return m
 
+#def pato(arquivo):
+  #for a in range(len(arquivo)):
+
 #(X_a_i_p) V (X_a_i_n) V (X_a_i_s)
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
-def ret1(arquivo, regra):
+def ret1(arquivo, m):
   list_row = []
-  for i in range(len(regra)):  
+  for i in range(m):  
     list_atoms = []
     for a in (range(len(arquivo)-1)):
       list_atom=[]
@@ -93,9 +96,9 @@ def ret1(arquivo, regra):
 (¬xP I≤42.09,4,s V¬xP I≤70.62,4,s V ¬xP I≤80.61,4,s V ¬xGS≤37.89,4,s V ¬xGS≤57.55,4,s)
 '''
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
-def ret2(arquivo, regra):
+def ret2(arquivo, m):
   list_row=[]
-  for i in (range(len(regra))):
+  for i in (range(len(m))):
     list_atom = []
     for a in (range(len(arquivo)-1)):
       list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
@@ -105,39 +108,46 @@ def ret2(arquivo, regra):
   return and_all(list_row)       
 
 def ret3(arquivo,regra):
-    list_atoms=[]
+    list_rows=[]
     for i in range(len(regra)):
             list_atom=[]
-            for a in range(len(arquivo)-1):  
-                list_atom.append('X'+str(arquivo[0][a])+'_'+ str(i+1)+'_'+ str())
+            for a in range(len(arquivo)-1):
+                    if regra[i] == arquivo[a]:
+                        list_atom.append('X'+str(arquivo[a])+''+ str(i+1)+''+'p')
+                    elif (regra[i] != arquivo[a]):
+                        list_atom.append('X'+str(arquivo[a])+''+ str(i+1)+''+'n')
+                    else:
+                        list_atom.append('X'+str(arquivo[a])+''+ str(i+1)+''+'s')
             list=or_all(list_atom)
-            list_atoms.append(list)
-    return and_all(list_atoms)  
+            list_rows.append(list)
+    return and_all(list_rows)
 
 def ret4(arquivo,regra):
-    list_atoms=[]
+    list_rows=[]
     for i in range(len(regra)):
         for j in range(len(arquivo)):
             list_atom=[]
             for a in range(len(arquivo)-1):
-                list_atom.append(Implies(Atom('X'+ str(arquivo[0][a])+'_'+str(i+1)+'_',),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
+                if (regra[i] == arquivo[a]):
+                    list_atom.append(Implies(Atom('X'+ str(arquivo[a])+''+str(i+1)+''+'p'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) ) 
+                elif (regra[i] != arquivo[a]):
+                    list_atom.append(Implies(Atom('X'+ str(arquivo[a])+''+str(i+1)+''+'n'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
                 list=and_all(list_atom)
-                list_atoms.append(list)
-    return and_all(list_atoms)
+                list_rows.append(list)
+    return and_all(list_rows)
 
 def ret5(arquivo,regra):
-    list_atoms=[]
+    list_rows=[]
     for j in range(len(arquivo)):
-      list_atom =[]
-      for i in range(len(regra)):
-        list_atom.append('C'+str(i+1)+''+str(j+1))
-      list=or_all(list_atom)
-      list_atoms.append(list)
-    return and_all(list_atoms)
+        list_atom =[]
+        for i in range(len(regra)):
+            list_atom.append('C'+str(i+1)+'_'+str(j+1))
+        list=or_all(list_atom)
+        list_rows.append(list)
+    return and_all(list_rows)
+#m = [0,1 ]
+#print(ret3(df.columns,m))
 
-#arquivo=[1,0,1],[0,0,0]
-#m=[0,1,2,3]
-#print(ret5(arquivo,m))
 
 
 
