@@ -14,7 +14,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\cesar.peixoto\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\cesar.peixoto\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_4p.csv') 
 
 
 sem_patologia=df[df["P"]!=1]  #pacientes sem patologia
@@ -193,8 +193,8 @@ def sat_check(formula,atomicas,valoracao):
             return valoracao
         return False
     nova_atomica=atomicas.pop()
-    val1= unionDic(valoracao, {nova_atomica: True})
-    val2= unionDic(valoracao, {nova_atomica: False})
+    val1= unionDic(valoracao, {nova_atomica.name: True})
+    val2= unionDic(valoracao, {nova_atomica.name: False})
     result1=sat_check(formula, atomicas.copy(),val1)
     if result1 != False:
         return result1
@@ -208,8 +208,8 @@ def truth_value(formula, valoracao):
     """
     if isinstance(formula, Atom):
         #para verificar se dentro do dicionario tem um valor para formula.
-        if valoracao.__contains__(formula):
-            return valoracao[formula] 
+        if valoracao.__contains__(formula.name):
+            return valoracao[formula.name] 
         #caso a formula não exista retorna None
         return None
     if isinstance(formula, Not):
@@ -359,7 +359,7 @@ def ret3(arquivo,regra):
         else:
           list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p'))  
       list=or_all(list_atom)
-    list_rows.append(list)
+      list_rows.append(list)
   return and_all(list_rows)        
 ##############################################################################
 #(xP I≤42.09,1,p → ¬c1,1) ∧ (xP I≤70.62,1,p → ¬c1,1) ∧ (xP I≤80.61,1,n → ¬c1,1) ∧ (xGS≤37.89,1,p → ¬c1,1 ) ∧ (xGS≤57.55,1,n → ¬c1,1)
@@ -378,9 +378,9 @@ def ret4(arquivo,regra):
             list_atom=[]
             for coluna in range(len(arquivo.columns)-1):
                 if (arquivo.iloc[linha,coluna] == 1):
-                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
+                    list_atom.append(Implies(Atom('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
                 else:
-                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
+                    list_atom.append(Implies(Atom('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
                 list=and_all(list_atom)
                 list_rows.append(list)
     return and_all(list_rows)
@@ -414,6 +414,7 @@ def patologia_solucao(arquivo,regra):
   print(ret4(com_patologia,m))
   print("Restrição 5: ")
   print(ret5(com_patologia,m))
+  print("Valoração:")
   final_formula= And(
         And(
             And(
@@ -428,24 +429,18 @@ def patologia_solucao(arquivo,regra):
         ret5(com_patologia,regra)
     )
   solution=(satisfiability_brute_force(final_formula))
+ 
   return solution
 
 
-m = 1
+
+
+
+
+
+m = 2
 print(patologia_solucao(df.columns,m))
-#   if solution:
-#     for j in range(len(arquivo)):
-#         print('Paciente '+ str(j+1)+' tem patologia')
-#         for i in range(len(regra)):
-#                 list_atom=[]
-#                 for a in range(len(arquivo)):
-#                         list_atom.append(str(arquivo[a]))
-#         break
-#     return print(str(list_atom)+'⇒'+'P')
-#   else:
-#       print('Paciente'+' '+ str(j+1) +' '+'não tem patalogia')
-# regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
-# print(patologia_solucao(df.columns,regra3))
+
 #############################################################################
 
 
