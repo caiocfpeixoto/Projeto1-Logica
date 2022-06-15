@@ -6,13 +6,17 @@ from ferramentas.semantics import *
 
 #altere o endereço de acordo com localização do arquivo
 #usar o df como padrão
-df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_2p.csv')  
+df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_3p.csv')  
 #regra3a_2p  {['PI > 54.92]'}
 #regra3a_3p  {['PI > 70.62','GS > 57.55']}o número é definido pelos atributos diferentes
 #regra3a_4p ['PI > 42.09', 'LA > 39.63', 'GS > 37.89'] tem algo de errado com a regra, talvez ajude na modelagem
-regra1 = ['PI > 54.92']
-regra2 = ['PI > 70.62', 'GS > 57.55']
-regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
+# regra1 = ['PI > 54.92']
+# regra2 = ['PI > 70.62', 'GS > 57.55']
+# regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
+
+sem_patologia=df[df["P"]!=1]  #pacientes sem patologia
+
+com_patologia=df[df["P"]==1]  #pacientes com patologia
 
 #print(df)
 
@@ -106,42 +110,49 @@ def ret2(arquivo, m):
     list = or_all(list_atom)
     list_row.append(list)
   
-  return and_all(list_row)       
+  return and_all(list_row)     
+
+ #leitura da parte de 1 e 0 dos pacientes
+# for linha in range(len(df.index)):
+#      for coluna in range(len(df.columns)-1) :
+#          if df.iloc[linha][coluna] == 1:
+#            print(f'1 = {df.iloc[linha][coluna]}')
+#          if df.iloc[linha][coluna] != 1:
+#            print(f'0 = {df.iloc[linha][coluna]}')    
 
 def ret3(arquivo,regra):
-    list_rows=[]
-    for i in range(len(regra)):
-            list_atom=[]
-            for a in range(len(arquivo)-1):
-                    if regra[i] == arquivo[a]:
-                        list_atom.append('X'+str(arquivo[a])+''+ str(i+1)+''+'p')
-                    elif (regra[i] != arquivo[a]):
-                        list_atom.append('X'+str(arquivo[a])+''+ str(i+1)+''+'n')
-                    else:
-                        list_atom.append('X'+str(arquivo[a])+''+ str(i+1)+''+'s')
-            list=or_all(list_atom)
-            list_rows.append(list)
-    return and_all(list_rows)
+  list_rows=[]
+  for i in range(regra):
+    list_atom=[]
+    for linha in range(len(arquivo.index)):
+      for coluna in  range(len(arquivo.columns)-1):  
+        if arquivo.iloc[linha,coluna] == 1:
+          list_atom.append(Atom('X_'+arquivo.columns[coluna]+'_'+(str(i+1))+'_n'))
+        else:
+          list_atom.append(Atom('X_'+arquivo.columns[coluna]+'_'+(str(i+1))+'_p'))  
+        list=or_all(list_atom)
+    list_rows.append(list)
+  return and_all(list_rows)
 
 def ret4(arquivo,regra):
     list_rows=[]
-    for i in range(len(regra)):
-        for j in range(len(arquivo)):
+    for i in range(regra):
+        for linha in range(len(arquivo.index)):
             list_atom=[]
-            for a in range(len(arquivo)-1):
-                if (regra[i] == arquivo[a]):
-                    list_atom.append(Implies(Atom('X'+ str(arquivo[a])+''+str(i+1)+''+'p'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) ) 
-                elif (regra[i] != arquivo[a]):
-                    list_atom.append(Implies(Atom('X'+ str(arquivo[a])+''+str(i+1)+''+'n'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
+            for coluna in range(len(arquivo.columns)-1):
+                if (arquivo.iloc[linha,coluna] == 1):
+                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
+                else:
+                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
                 list=and_all(list_atom)
                 list_rows.append(list)
     return and_all(list_rows)
 
-def ret5(arquivo,m):
+def ret5(arquivo, regra):
     list_rows=[]
-    for j in range(len(arquivo)):
+    for j in range(len(arquivo.index)):
         list_atom =[]
-        for i in range(m):
+        for i in range(regra):
             list_atom.append('C'+str(i+1)+'_'+str(j+1))
         list=or_all(list_atom)
         list_rows.append(list)
