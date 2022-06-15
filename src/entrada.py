@@ -6,7 +6,7 @@ from ferramentas.semantics import *
 
 #altere o endereço de acordo com localização do arquivo
 #usar o df como padrão
-df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_5p.csv')  
+df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_5a_3p.csv')  
 #regra3a_2p  {['PI > 54.92]'}
 #regra3a_3p  {['PI > 70.62','GS > 57.55']}o número é definido pelos atributos diferentes
 #regra3a_4p ['PI > 42.09', 'LA > 39.63', 'GS > 37.89'] tem algo de errado com a regra, talvez ajude na modelagem
@@ -59,9 +59,9 @@ def contagem(arquivo):
 
 #(X_a_i_p) V (X_a_i_n) V (X_a_i_s)
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
-def ret1(arquivo, m):
+def ret1(arquivo, regra):
   list_row = []
-  for i in range(m):  
+  for i in range(regra):  
     list_atoms = []
     for a in (range(len(arquivo)-1)):
       list_atom=[]
@@ -69,18 +69,18 @@ def ret1(arquivo, m):
         list_aux = []
         if aux == 0:
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
           
           
         if aux == 1:
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
             
         if aux == 2:
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
         
         list = and_all(list_aux) 
@@ -94,19 +94,19 @@ def ret1(arquivo, m):
 
   return and_all(list_row)
 
-'''
-(¬xP I≤42.09,1,s V ¬xP I≤70.62,1,s V ¬xP I≤80.61,1,s V ¬xGS≤37.89,1,s V ¬xGS≤57.55,1,s)
-(¬xP I≤42.09,2,s V ¬xP I≤70.62,2,s V ¬xP I≤80.61,2,s V ¬xGS≤37.89,2,s V ¬xGS≤57.55,2,s)
-(¬xP I≤42.09,3,s V ¬xP I≤70.62,3,s V ¬xP I≤80.61,3,s V ¬xGS≤37.89,3,s V ¬xGS≤57.55,3,s)
-(¬xP I≤42.09,4,s V¬xP I≤70.62,4,s V ¬xP I≤80.61,4,s V ¬xGS≤37.89,4,s V ¬xGS≤57.55,4,s)
-'''
+
+# (¬xP I≤42.09,1,s V ¬xP I≤70.62,1,s V ¬xP I≤80.61,1,s V ¬xGS≤37.89,1,s V ¬xGS≤57.55,1,s)
+# (¬xP I≤42.09,2,s V ¬xP I≤70.62,2,s V ¬xP I≤80.61,2,s V ¬xGS≤37.89,2,s V ¬xGS≤57.55,2,s)
+# (¬xP I≤42.09,3,s V ¬xP I≤70.62,3,s V ¬xP I≤80.61,3,s V ¬xGS≤37.89,3,s V ¬xGS≤57.55,3,s)
+# (¬xP I≤42.09,4,s V¬xP I≤70.62,4,s V ¬xP I≤80.61,4,s V ¬xGS≤37.89,4,s V ¬xGS≤57.55,4,s)
+
 #df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
-def ret2(arquivo, m):
+def ret2(arquivo, regra):
   list_row=[]
-  for i in (range(m)):
+  for i in (range(regra)):
     list_atom = []
     for a in (range(len(arquivo)-1)):
-      list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
+      list_atom.append(Not(Atom(f'X_{arquivo[a]}_{str(i+1)}_s')))
     list = or_all(list_atom)
     list_row.append(list)
   
@@ -153,12 +153,47 @@ def ret5(arquivo, regra):
     for j in range(len(arquivo.index)):
         list_atom =[]
         for i in range(regra):
-            list_atom.append('C'+str(i+1)+'_'+str(j+1))
+            list_atom.append(Atom('C'+str(i+1)+'_'+str(j+1)))
         list=or_all(list_atom)
         list_rows.append(list)
     return and_all(list_rows)
-#m = [0,1 ]
-#print(ret3(df.columns,m))
+
+def patologia_solucao(arquivo, regra):
+  arquivo_sem_patologia=arquivo[arquivo["P"]!=1]  #pacientes sem patologia
+  arquivo_com_patologia=arquivo[arquivo["P"]==1]  #pacientes com patologia
+
+  final_formula= And(
+    And(
+      And(
+          ret1(arquivo.columns,regra),
+          ret2(arquivo.columns,regra)
+        ),
+      And(
+          ret3(arquivo_sem_patologia,regra),
+          ret4(arquivo_com_patologia,regra)
+        ),
+         ),
+      ret5(arquivo_com_patologia,regra)
+    )
+  solution=(satisfiability_brute_force(final_formula))
+  return solution
+ 
+
+# def patologia_solucao(arquivo_ret1_e_ret2, arquivo_ret3, arquivo_ret4_e_ret5, regra):
+#   final_formula= And(
+#         And(
+#           And(
+#             ret1(arquivo_ret1_e_ret2,regra),
+#             ret2(arquivo_ret1_e_ret2,regra)
+#              ),
+#           And(
+#             ret3(arquivo_ret3,regra),
+#             ret4(arquivo_ret4_e_ret5,regra)
+#             ),
+#         ),
+#         ret5(arquivo_ret4_e_ret5,regra)
+#      )
+#   solution=(satisfiability_brute_force(final_formula))
 
 
 
