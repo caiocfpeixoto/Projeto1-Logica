@@ -12,13 +12,13 @@ import entrada
 
 # print(entrada.ret2(entrada.df.columns, entrada.contagem(entrada.df.columns)))
 
-# print('rest3 - > ')
+print('rest3 - > ')
 
-# print(entrada.ret3(entrada.sem_patologia, entrada.contagem(entrada.df.columns)))
+print(entrada.ret3(entrada.sem_patologia, entrada.contagem(entrada.df.columns)))
 
-print('rest4 - > ')
+# print('rest4 - > ')
 
-print(entrada.ret4(entrada.com_patologia, entrada.contagem(entrada.df.columns)))
+# print(entrada.ret4(entrada.com_patologia, entrada.contagem(entrada.df.columns)))
 
 # print('rest5 - > ')
 

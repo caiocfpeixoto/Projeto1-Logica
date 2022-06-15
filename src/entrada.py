@@ -127,10 +127,10 @@ def ret3(arquivo,regra):
     for linha in range(len(arquivo.index)):
       for coluna in  range(len(arquivo.columns)-1):  
         if arquivo.iloc[linha,coluna] == 1:
-          list_atom.append(Atom('X_'+arquivo.columns[coluna]+'_'+(str(i+1))+'_n'))
+          list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n'))
         else:
-          list_atom.append(Atom('X_'+arquivo.columns[coluna]+'_'+(str(i+1))+'_p'))  
-        list=or_all(list_atom)
+          list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p'))  
+      list=or_all(list_atom)
     list_rows.append(list)
   return and_all(list_rows)
 
