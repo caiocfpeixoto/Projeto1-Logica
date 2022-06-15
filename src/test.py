@@ -14,7 +14,12 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\cesar.peixoto\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+
+
+sem_patologia=df[df["P"]!=1]  #pacientes sem patologia
+
+com_patologia=df[df["P"]==1]  #pacientes com patologia
 #import pandas as pd1
 class Formula:
     def __init__(self):
@@ -289,9 +294,9 @@ def contagem(arquivo):
 ##############################################################################
 
 #restricão 1
-def ret1(arquivo, regra):
+def ret1(arquivo, m):
   list_row = []
-  for i in range(len(regra)):  
+  for i in range(m):  
     list_atoms = []
     for a in (range(len(arquivo)-1)):
       list_atom=[]
@@ -299,18 +304,18 @@ def ret1(arquivo, regra):
         list_aux = []
         if aux == 0:
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
           
           
         if aux == 1:
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
             
         if aux == 2:
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
         
         list = and_all(list_aux) 
@@ -322,16 +327,16 @@ def ret1(arquivo, regra):
     list = and_all(list_atoms)
     list_row.append(list)  
 
-  return and_all(list_row) 
+  return and_all(list_row)
 ##############################################################################
 
 #restricão 2
-def ret2(arquivo, regra):
+def ret2(arquivo, m):
   list_row=[]
-  for i in (range(len(regra))):
+  for i in (range(m)):
     list_atom = []
     for a in (range(len(arquivo)-1)):
-      list_atom.append(Not(Atom(f'X_{arquivo[a]}_{str(i+1)}_s')))
+      list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
     list = or_all(list_atom)
     list_row.append(list)
   
@@ -344,17 +349,18 @@ def ret2(arquivo, regra):
 #restricão 3
 
 def ret3(arquivo,regra):
-    list_rows=[]
-    for i in range(len(regra)):
-            list_atom=[]
-            for a in range(len(arquivo)-1):
-                    if regra[i] == arquivo[a][a]:
-                        list_atom.append('X_'+str(arquivo[a])+'_'+ str(i+1)+'_'+'p')
-                    elif (regra[i] != arquivo[a][a]):
-                        list_atom.append('X_'+str(arquivo[a])+'_'+ str(i+1)+'_'+'n')
-            list=or_all(list_atom)
-            list_rows.append(list)
-    return and_all(list_rows)        
+  list_rows=[]
+  for i in range(regra):
+    for linha in range(len(arquivo.index)):
+      list_atom=[]
+      for coluna in  range(len(arquivo.columns)-1):  
+        if arquivo.iloc[linha,coluna] == 1:
+          list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n'))
+        else:
+          list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p'))  
+      list=or_all(list_atom)
+    list_rows.append(list)
+  return and_all(list_rows)        
 ##############################################################################
 #(xP I≤42.09,1,p → ¬c1,1) ∧ (xP I≤70.62,1,p → ¬c1,1) ∧ (xP I≤80.61,1,n → ¬c1,1) ∧ (xGS≤37.89,1,p → ¬c1,1 ) ∧ (xGS≤57.55,1,n → ¬c1,1)
 #(xP I≤42.09,1,p → ¬c1,2) ∧ (xP I≤70.62,1,p → ¬c1,2) ∧ (xP I≤80.61,1,p → ¬c1,2) ∧ (xGS≤37.89,1,p → ¬c1,2) ∧ (xGS≤57.55,1,p → ¬c1,2)
@@ -367,14 +373,14 @@ def ret3(arquivo,regra):
 #restricão 4
 def ret4(arquivo,regra):
     list_rows=[]
-    for i in range(len(regra)):
-        for j in range(len(arquivo)):
+    for i in range(regra):
+        for linha in range(len(arquivo.index)):
             list_atom=[]
-            for a in range(len(arquivo)-1):
-                if (regra[i] == arquivo[a]):
-                    list_atom.append(Implies(Atom('X_'+ str(arquivo[a])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) ) 
-                elif (regra[i] != arquivo[a]):
-                    list_atom.append(Implies(Atom('X_'+ str(arquivo[a])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(j+1)))) )
+            for coluna in range(len(arquivo.columns)-1):
+                if (arquivo.iloc[linha,coluna] == 1):
+                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
+                else:
+                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
                 list=and_all(list_atom)
                 list_rows.append(list)
     return and_all(list_rows)
@@ -384,14 +390,14 @@ def ret4(arquivo,regra):
 #(c1,2 ∨ c2,2 ∨ c3,2 ∨ c4,2)
 #restricão 5
 
-def ret5(arquivo,regra):
+def ret5(arquivo, regra):
     list_rows=[]
-    for j in range(len(arquivo)):
+    for j in range(len(arquivo.index)):
         list_atom =[]
-        for i in range(len(regra)):
-            list_atom.append('C_'+str(i+1)+'_'+str(j+1))
+        for i in range(regra):
+            list_atom.append('C'+str(i+1)+'_'+str(j+1))
         list=or_all(list_atom)
-        list_rows.append(list)  
+        list_rows.append(list)
     return and_all(list_rows)
 
 ##############################################################################
@@ -401,30 +407,34 @@ def patologia_solucao(arquivo,regra):
   final_formula= And(
         And(
             And(
-                Atom(ret1(arquivo,regra)),
-                Atom(ret2(arquivo,regra))
+                ret1(arquivo,regra),
+                ret2(arquivo,regra)
             ),
             And(
-                Atom(ret3(arquivo,regra)),
-                Atom(ret4(arquivo,regra))
+                ret3(arquivo,regra),
+                ret4(arquivo,regra)
             ),
         ),
-        Atom(ret5(arquivo,regra))
+        ret5(arquivo,regra)
     )
   solution=(satisfiability_brute_force(final_formula))
-  if solution:
-    for j in range(len(arquivo)):
-        print('Paciente '+ str(j+1)+' tem patologia')
-        for i in range(len(regra)):
-                list_atom=[]
-                for a in range(len(arquivo)):
-                        list_atom.append(str(arquivo[a]))
-        break
-    return print(str(list_atom)+'⇒'+'P')
-  else:
-      print('Paciente'+' '+ str(j+1) +' '+'não tem patalogia')
-regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
-print(patologia_solucao(df.columns,regra3))
+
+
+m = 1
+print(patologia_solucao(df.columns,m))
+#   if solution:
+#     for j in range(len(arquivo)):
+#         print('Paciente '+ str(j+1)+' tem patologia')
+#         for i in range(len(regra)):
+#                 list_atom=[]
+#                 for a in range(len(arquivo)):
+#                         list_atom.append(str(arquivo[a]))
+#         break
+#     return print(str(list_atom)+'⇒'+'P')
+#   else:
+#       print('Paciente'+' '+ str(j+1) +' '+'não tem patalogia')
+# regra3 = ['PI > 42.09', 'LA > 39.63', 'GS > 37.89']
+# print(patologia_solucao(df.columns,regra3))
 #############################################################################
 
 
