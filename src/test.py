@@ -14,7 +14,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\cesar.peixoto\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 
 
 sem_patologia=df[df["P"]!=1]  #pacientes sem patologia
@@ -183,7 +183,7 @@ def atoms(formula):
     if isinstance(formula,Implies) or isinstance(formula,Or) or isinstance(formula,And):
         atom1=atoms(formula.left)
         atom2=atoms(formula.right)
-        return atom1.union(atom2)
+        return (atom1).union(atom2)
 ##############################################################################
 
 # Função para verificar se a formula é satisfativel e em qual valoração
@@ -304,18 +304,18 @@ def ret1(arquivo, m):
         list_aux = []
         if aux == 0:
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
           
           
         if aux == 1:
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
             
         if aux == 2:
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
+          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
         
         list = and_all(list_aux) 
@@ -336,7 +336,7 @@ def ret2(arquivo, m):
   for i in (range(m)):
     list_atom = []
     for a in (range(len(arquivo)-1)):
-      list_atom.append(Not(f'X_{arquivo[a]}_{str(i+1)}_s'))
+      list_atom.append(Not(Atom(f'X_{arquivo[a]}_{str(i+1)}_s')))
     list = or_all(list_atom)
     list_row.append(list)
   
@@ -378,9 +378,9 @@ def ret4(arquivo,regra):
             list_atom=[]
             for coluna in range(len(arquivo.columns)-1):
                 if (arquivo.iloc[linha,coluna] == 1):
-                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
+                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
                 else:
-                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
+                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
                 list=and_all(list_atom)
                 list_rows.append(list)
     return and_all(list_rows)
@@ -395,7 +395,7 @@ def ret5(arquivo, regra):
     for j in range(len(arquivo.index)):
         list_atom =[]
         for i in range(regra):
-            list_atom.append('C'+str(i+1)+'_'+str(j+1))
+            list_atom.append(Atom('C'+str(i+1)+'_'+str(j+1)))
         list=or_all(list_atom)
         list_rows.append(list)
     return and_all(list_rows)
@@ -404,6 +404,16 @@ def ret5(arquivo, regra):
 
 #Solução
 def patologia_solucao(arquivo,regra):
+  print("Restrição 1: ")
+  print(ret1(df.columns,m))
+  print("Restrição 2: ")
+  print(ret2(df.columns,m))
+  print("Restrição 3: ")
+  print(ret3(sem_patologia,m))
+  print("Restrição 4: ")
+  print(ret4(com_patologia,m))
+  print("Restrição 5: ")
+  print(ret5(com_patologia,m))
   final_formula= And(
         And(
             And(
@@ -411,13 +421,14 @@ def patologia_solucao(arquivo,regra):
                 ret2(arquivo,regra)
             ),
             And(
-                ret3(arquivo,regra),
-                ret4(arquivo,regra)
+                ret3(sem_patologia,regra),
+                ret4(com_patologia,regra)
             ),
         ),
-        ret5(arquivo,regra)
+        ret5(com_patologia,regra)
     )
   solution=(satisfiability_brute_force(final_formula))
+  return solution
 
 
 m = 1
