@@ -6,7 +6,7 @@ from ferramentas.semantics import *
 
 #altere o endereço de acordo com localização do arquivo
 #usar o df como padrão
-df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_3p.csv')  
+df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_5p.csv')  
 #regra3a_2p  {['PI > 54.92]'}
 #regra3a_3p  {['PI > 70.62','GS > 57.55']}o número é definido pelos atributos diferentes
 #regra3a_4p ['PI > 42.09', 'LA > 39.63', 'GS > 37.89'] tem algo de errado com a regra, talvez ajude na modelagem
@@ -123,8 +123,8 @@ def ret2(arquivo, m):
 def ret3(arquivo,regra):
   list_rows=[]
   for i in range(regra):
-    list_atom=[]
     for linha in range(len(arquivo.index)):
+      list_atom=[]
       for coluna in  range(len(arquivo.columns)-1):  
         if arquivo.iloc[linha,coluna] == 1:
           list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n'))
