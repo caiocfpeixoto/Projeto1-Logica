@@ -130,7 +130,7 @@ def ret3(arquivo,regra):
           list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n'))
         else:
           list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p'))  
-      list=or_all(list_atom)
+    list=or_all(list_atom)
     list_rows.append(list)
   return and_all(list_rows)
 
@@ -141,9 +141,9 @@ def ret4(arquivo,regra):
             list_atom=[]
             for coluna in range(len(arquivo.columns)-1):
                 if (arquivo.iloc[linha,coluna] == 1):
-                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
+                    list_atom.append(Implies(Atom('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
                 else:
-                    list_atom.append(Implies(Atom('X'+ str(arquivo.columns[coluna])+''+str(i+1)+''+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
+                    list_atom.append(Implies(Atom('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
                 list=and_all(list_atom)
                 list_rows.append(list)
     return and_all(list_rows)
@@ -158,42 +158,26 @@ def ret5(arquivo, regra):
         list_rows.append(list)
     return and_all(list_rows)
 
-# def patologia_solucao(arquivo, regra):
-#   arquivo_sem_patologia=arquivo[arquivo["P"]!=1]  #pacientes sem patologia
-#   arquivo_com_patologia=arquivo[arquivo["P"]==1]  #pacientes com patologia
+def patologia_solucao(arquivo, regra):
+  arquivo_sem_patologia=arquivo[arquivo["P"]!=1]  #pacientes sem patologia
+  arquivo_com_patologia=arquivo[arquivo["P"]==1]  #pacientes com patologia
 
-#   final_formula= And(
-#     And(
-#       And(
-#           ret1(arquivo.columns,regra),
-#           ret2(arquivo.columns,regra)
-#         ),
-#       And(
-#           ret3(arquivo_sem_patologia,regra),
-#           ret4(arquivo_com_patologia,regra)
-#         ),
-#          ),
-#       ret5(arquivo_com_patologia,regra)
-#     )
-#   solution=(satisfiability_brute_force(final_formula))
-#   return solution
- 
-
-def patologia_solucao(arquivo_ret1_e_ret2, arquivo_ret3, arquivo_ret4_e_ret5, regra):
   final_formula= And(
-      And(
-          And(
-            ret1(arquivo_ret1_e_ret2,regra),
-            ret2(arquivo_ret1_e_ret2,regra)
-            ),
-          And(
-            ret3(arquivo_ret3,regra),
-            ret4(arquivo_ret4_e_ret5,regra)
-            ),
-      ),
-      ret5(arquivo_ret4_e_ret5,regra)
+    And(
+        And(
+          ret1(arquivo.columns,regra),
+          ret2(arquivo.columns,regra)          
+          ),
+       And(
+           ret3(arquivo_sem_patologia,regra),
+           ret4(arquivo_com_patologia,regra)
+         ),
+          ),
+       ret5(arquivo_com_patologia,regra)
      )
   solution=(satisfiability_brute_force(final_formula))
+  return solution
+ 
 
 
 

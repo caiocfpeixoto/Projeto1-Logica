@@ -5,6 +5,7 @@ from operator import truediv
 from pickle import FALSE, TRUE
 from queue import Empty
 from ferramentas.semantics import *
+
 ##############################################################################
 
 def length(formula):
@@ -40,30 +41,25 @@ def subformulas(formula):
 #  we have shown in class that, for all formula A, len(subformulas(A)) <= length(A).
 ##############################################################################
 
-# Função para retornar as atomicas de uma formula
-def atoms(formula):
-    if isinstance(formula,Atom):
-        return {formula}
-    if isinstance(formula,Not):
-        return atoms(formula.inner)
-    if isinstance(formula,Implies) or isinstance(formula,Or) or isinstance(formula,And):
-        atom1=atoms(formula.left)
-        atom2=atoms(formula.right)
-        return atom1.union(atom2)
+
+
 ##############################################################################
 
-# Função para retornar se a formula é satisfatível 
+# Função para verificar se a formula é satisfativel e em qual valoração
 def sat_check(formula,atomicas,valoracao):
-    if atomicas is Empty :
-        if truth_value(formula,valoracao)==True :
+    if len(atomicas) == 0:
+        if truth_value(formula,valoracao):
             return valoracao
         return False
     nova_atomica=atomicas.pop()
-    val1 = valoracao.union({atomicas,True})
-    val2 = valoracao.union({atomicas,False})
-    result1=sat_check(formula,atomicas,val1)
+    val1= unionDic(valoracao, {nova_atomica.name: True})
+    val2= unionDic(valoracao, {nova_atomica.name: False})
+    result1=sat_check(formula, atomicas.copy(),val1)
     if result1 != False:
         return result1
-    return sat_check(formula,atomicas,val2)
-
+    return sat_check(formula, atomicas.copy(),val2)
 ##############################################################################
+
+# União de dicionários
+def unionDic(dic1, dic2):
+    return (dic1 | dic2)

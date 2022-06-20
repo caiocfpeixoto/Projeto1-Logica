@@ -31,5 +31,4 @@ print(entrada.ret5(entrada.com_patologia, entrada.contagem(entrada.df.columns)))
 print('###############################################')
 print('solução: ')
 
-print(entrada.patologia_solucao(entrada.df.columns, entrada.sem_patologia, entrada.com_patologia, entrada.contagem(entrada.df.columns)))
-# print(entrada.patologia_solucao(entrada.df, entrada.contagem(entrada.df.columns)))
+print(entrada.patologia_solucao(entrada.df, entrada.contagem(entrada.df.columns)))
