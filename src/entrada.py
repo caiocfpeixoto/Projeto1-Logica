@@ -158,42 +158,42 @@ def ret5(arquivo, regra):
         list_rows.append(list)
     return and_all(list_rows)
 
-def patologia_solucao(arquivo, regra):
-  arquivo_sem_patologia=arquivo[arquivo["P"]!=1]  #pacientes sem patologia
-  arquivo_com_patologia=arquivo[arquivo["P"]==1]  #pacientes com patologia
+# def patologia_solucao(arquivo, regra):
+#   arquivo_sem_patologia=arquivo[arquivo["P"]!=1]  #pacientes sem patologia
+#   arquivo_com_patologia=arquivo[arquivo["P"]==1]  #pacientes com patologia
 
-  final_formula= And(
-    And(
-      And(
-          ret1(arquivo.columns,regra),
-          ret2(arquivo.columns,regra)
-        ),
-      And(
-          ret3(arquivo_sem_patologia,regra),
-          ret4(arquivo_com_patologia,regra)
-        ),
-         ),
-      ret5(arquivo_com_patologia,regra)
-    )
-  solution=(satisfiability_brute_force(final_formula))
-  return solution
+#   final_formula= And(
+#     And(
+#       And(
+#           ret1(arquivo.columns,regra),
+#           ret2(arquivo.columns,regra)
+#         ),
+#       And(
+#           ret3(arquivo_sem_patologia,regra),
+#           ret4(arquivo_com_patologia,regra)
+#         ),
+#          ),
+#       ret5(arquivo_com_patologia,regra)
+#     )
+#   solution=(satisfiability_brute_force(final_formula))
+#   return solution
  
 
-# def patologia_solucao(arquivo_ret1_e_ret2, arquivo_ret3, arquivo_ret4_e_ret5, regra):
-#   final_formula= And(
-#         And(
-#           And(
-#             ret1(arquivo_ret1_e_ret2,regra),
-#             ret2(arquivo_ret1_e_ret2,regra)
-#              ),
-#           And(
-#             ret3(arquivo_ret3,regra),
-#             ret4(arquivo_ret4_e_ret5,regra)
-#             ),
-#         ),
-#         ret5(arquivo_ret4_e_ret5,regra)
-#      )
-#   solution=(satisfiability_brute_force(final_formula))
+def patologia_solucao(arquivo_ret1_e_ret2, arquivo_ret3, arquivo_ret4_e_ret5, regra):
+  final_formula= And(
+      And(
+          And(
+            ret1(arquivo_ret1_e_ret2,regra),
+            ret2(arquivo_ret1_e_ret2,regra)
+            ),
+          And(
+            ret3(arquivo_ret3,regra),
+            ret4(arquivo_ret4_e_ret5,regra)
+            ),
+      ),
+      ret5(arquivo_ret4_e_ret5,regra)
+     )
+  solution=(satisfiability_brute_force(final_formula))
 
 
 
