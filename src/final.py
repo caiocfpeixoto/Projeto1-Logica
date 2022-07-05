@@ -18,8 +18,9 @@ from xmlrpc.client import boolean
 df = pd.read_csv(r'C:\Users\USER\OneDrive\Documentos\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 from pysat.formula import CNF
 from pysat.formula import IDPool
+from pysat.solvers import Cadical
 var_pool = IDPool()
-formula = CNF()
+
 
 sem_patologia=df[df["P"]!=1]  #pacientes sem patologia
 
@@ -340,11 +341,10 @@ def ret2(arquivo, m):
   for i in (range(m)):
     list_atom = []
     for a in (range(len(arquivo)-1)):
-      list_atom.append(Not(Atom(f'X_{arquivo[a]}_{str(i+1)}_s')))
-    list = or_all(list_atom)
-    list_row.append(list)
+      list_atom.append([-var_pool.id(f'X_{arquivo[a]}_{str(i+1)}_s')])
+    list_row.append(list_atom)
   
-  return and_all(list_row) 
+  return list_row 
 ##############################################################################
 #(xPI≤42.09,1,p ∨ xPI≤70.62,1,p ∨ xPI≤80.61,1,p ∨ xGS≤37.89,1,n ∨ xGS≤57.55,1,n)
 #(xPI≤42.09,2,p ∨ xPI≤70.62,2,p ∨ xPI≤80.61,2,p ∨ xGS≤37.89,2,n ∨ xGS≤57.55,2,n)
@@ -359,9 +359,9 @@ def ret3(arquivo,regra):
       list_atom=[]
       for coluna in  range(len(arquivo.columns)-1):  
         if arquivo.iloc[linha,coluna] == 1:
-          list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n'))
+          list_atom.append([var_pool.id('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n')])
         else:
-          list_atom.append(Atom('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p'))  
+          list_atom.append([var_pool.id('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p')])  
       list=or_all(list_atom)
       list_rows.append(list)
   return and_all(list_rows)        
@@ -399,51 +399,74 @@ def ret5(arquivo, regra):
     for j in range(len(arquivo.index)):
         list_atom =[]
         for i in range(regra):
-            list_atom.append(Atom('C'+str(i+1)+'_'+str(j+1)))
+            list_atom.append([var_pool.id('C'+str(i+1)+'_'+str(j+1))])
         list=or_all(list_atom)
         list_rows.append(list)
     return and_all(list_rows)
 
 ##############################################################################
 
+def pretty_formula_printer(formula):
+  for clause in formula:
+    for literal in clause:
+      if literal > 0:
+        print(var_pool.obj(literal), ' ',  end = '')
+      else:
+        print('Not', var_pool.obj(literal*-1), ' ',  end = '')
+    print('')
+##############################################################################
+
 #Solução
 def patologia_solucao(arquivo,regra):
   print("Restrição 1: ")
-  print(ret1(df.columns,m))
+  #print(pretty_formula_printer(ret1(df.columns,m)))
   print("Restrição 2: ")
   print(ret2(df.columns,m))
   print("Restrição 3: ")
-  print(ret3(sem_patologia,m))
+  print(pretty_formula_printer(ret3(sem_patologia,m)))
   print("Restrição 4: ")
-  print(ret4(com_patologia,m))
+  #print(pretty_formula_printer(ret4(com_patologia,m)))
   print("Restrição 5: ")
-  print(ret5(com_patologia,m))
+  print(pretty_formula_printer(ret5(com_patologia,m)))
   print("Valoração:")
-  final_formula= And(
-        And(
-            And(
-                ret1(arquivo,regra),
-                ret2(arquivo,regra)
-            ),
-            And(
-                ret3(sem_patologia,regra),
-                ret4(com_patologia,regra)
-            ),
-        ),
-        ret5(com_patologia,regra)
-    )
-  solution=(satisfiability_brute_force(final_formula))
+
+  clauses1 = ret1(arquivo,regra)
+  clauses2 = ret2(arquivo,regra)
+  clauses3 = ret3(arquivo,regra)
+  clauses4 = ret4(arquivo,regra)
+  clauses5 = ret5(arquivo,regra)
+  clauses = clauses1 + clauses2 + clauses3 + clauses4 + clauses5
+  cnf = CNF(from_clauses= clauses)
+  solver_final = Cadical()
+  solver_final.append_formula(cnf.clauses)
+  solver_final.solve()
+
+  solver_final.get_model()
+#   final_formula= And(
+#         And(
+#             And(
+#                 ret1(arquivo,regra),
+#                 ret2(arquivo,regra)
+#             ),
+#             And(
+#                 ret3(sem_patologia,regra),
+#                 ret4(com_patologia,regra)
+#             ),
+#         ),
+#         ret5(com_patologia,regra)
+#     )
+#   solution=(satisfiability_brute_force(final_formula))
     
-  if solution:
-    for i in range(len(arquivo)):
-        for j in range(len(arquivo)):
-            if arquivo[i][j] == str('0'):
-                for n in range(len(arquivo)):
-                    if solution[str(i+1) + "_" + str(j+1) + "_" + str(i+1)]:
-                        arquivo[i][j] = n + 1
-    print(arquivo +'⇒'+ 'P')
-  else:
-    print("É insatisfatível")
+#   if solution:
+#     for i in range(len(arquivo)):
+#         for j in range(len(arquivo)):
+#             if arquivo[i][j] == str('0'):
+#                 for n in range(len(arquivo)):
+#                     if solution[str(i+1) + "_" + str(j+1) + "_" + str(i+1)]:
+#                         arquivo[i][j] = n + 1
+#     print(arquivo +'⇒'+ 'P')
+#   else:
+#     print("É insatisfatível")
 
          
 
