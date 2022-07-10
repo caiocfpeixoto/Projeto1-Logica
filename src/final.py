@@ -341,7 +341,7 @@ def ret2(arquivo, m):
   for i in (range(m)):
     list_atom = []
     for a in (range(len(arquivo)-1)):
-      list_atom.append([-var_pool.id(f'X_{arquivo[a]}_{str(i+1)}_s')])
+      list_atom.append(-var_pool.id(f'X_{arquivo[a]}_{str(i+1)}_s'))
     list_row.append(list_atom)
   
   return list_row 
@@ -359,12 +359,11 @@ def ret3(arquivo,regra):
       list_atom=[]
       for coluna in  range(len(arquivo.columns)-1):  
         if arquivo.iloc[linha,coluna] == 1:
-          list_atom.append([var_pool.id('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n')])
+          list_atom.append(var_pool.id('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_n'))
         else:
-          list_atom.append([var_pool.id('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p')])  
-      list=or_all(list_atom)
-      list_rows.append(list)
-  return and_all(list_rows)        
+          list_atom.append(var_pool.id('X_'+str(arquivo.columns[coluna])+'_'+(str(i+1))+'_p'))  
+      list_rows.append(list_atom)
+  return list_rows        
 ##############################################################################
 #(xP I≤42.09,1,p → ¬c1,1) ∧ (xP I≤70.62,1,p → ¬c1,1) ∧ (xP I≤80.61,1,n → ¬c1,1) ∧ (xGS≤37.89,1,p → ¬c1,1 ) ∧ (xGS≤57.55,1,n → ¬c1,1)
 #(xP I≤42.09,1,p → ¬c1,2) ∧ (xP I≤70.62,1,p → ¬c1,2) ∧ (xP I≤80.61,1,p → ¬c1,2) ∧ (xGS≤37.89,1,p → ¬c1,2) ∧ (xGS≤57.55,1,p → ¬c1,2)
@@ -382,12 +381,15 @@ def ret4(arquivo,regra):
             list_atom=[]
             for coluna in range(len(arquivo.columns)-1):
                 if (arquivo.iloc[linha,coluna] == 1):
-                    list_atom.append(Implies(Atom('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) ) 
+                    list1 = (-var_pool.id('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'))
+                    list2 = (-var_pool.id('C'+str(i+1)+'_'+str(linha+1)))
+                    list_atom.append(list1 + list2) 
                 else:
-                    list_atom.append(Implies(Atom('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'),Not(Atom('C'+str(i+1)+'_'+str(linha+1)))) )
-                list=and_all(list_atom)
-                list_rows.append(list)
-    return and_all(list_rows)
+                    list1 = (-var_pool.id('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'))
+                    list2 = (-var_pool.id('C'+str(i+1)+'_'+str(linha+1)))
+                    list_atom.append( list1 + list2)
+                list_rows.append(list_atom)
+    return list_rows
 
 ##############################################################################
 #(c1,1 ∨ c2,1 ∨ c3,1 ∨ c4,1)
@@ -399,10 +401,9 @@ def ret5(arquivo, regra):
     for j in range(len(arquivo.index)):
         list_atom =[]
         for i in range(regra):
-            list_atom.append([var_pool.id('C'+str(i+1)+'_'+str(j+1))])
-        list=or_all(list_atom)
-        list_rows.append(list)
-    return and_all(list_rows)
+            list_atom.append(var_pool.id('C'+str(i+1)+'_'+str(j+1)))
+        list_rows.append(list_atom)
+    return list_rows
 
 ##############################################################################
 
@@ -420,23 +421,34 @@ def pretty_formula_printer(formula):
 def patologia_solucao(arquivo,regra):
   print("Restrição 1: ")
   #print(pretty_formula_printer(ret1(df.columns,m)))
+
   print("Restrição 2: ")
   print(ret2(df.columns,m))
+  print(pretty_formula_printer(ret2(df.columns,m)))
+
   print("Restrição 3: ")
+  print(ret3(sem_patologia,m))
   print(pretty_formula_printer(ret3(sem_patologia,m)))
+
   print("Restrição 4: ")
-  #print(pretty_formula_printer(ret4(com_patologia,m)))
+  print(ret4(com_patologia,m))
+  print(pretty_formula_printer(ret4(com_patologia,m)))
+
   print("Restrição 5: ")
+  print(ret5(com_patologia,m))
   print(pretty_formula_printer(ret5(com_patologia,m)))
+
   print("Valoração:")
 
   clauses1 = ret1(arquivo,regra)
   clauses2 = ret2(arquivo,regra)
-  clauses3 = ret3(arquivo,regra)
-  clauses4 = ret4(arquivo,regra)
-  clauses5 = ret5(arquivo,regra)
+  clauses3 = ret3(sem_patologia,regra)
+  clauses4 = ret4(com_patologia,regra)
+  clauses5 = ret5(com_patologia,regra)
   clauses = clauses1 + clauses2 + clauses3 + clauses4 + clauses5
   cnf = CNF(from_clauses= clauses)
+  print(len(cnf.clauses))
+  print(cnf.nv)
   solver_final = Cadical()
   solver_final.append_formula(cnf.clauses)
   solver_final.solve()
