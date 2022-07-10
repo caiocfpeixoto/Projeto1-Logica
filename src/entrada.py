@@ -6,7 +6,7 @@ from ferramentas.semantics import *
 
 #altere o endereço de acordo com localização do arquivo
 #usar o df como padrão
-df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_5a_3p.csv')  
+df = pd.read_csv(r'C:\\Users\Luciano\Desktop\Workspace\Python\Projeto I\\Arquivos - Pacientes\column_bin_3a_3p.csv')  
 #regra3a_2p  {['PI > 54.92]'}
 #regra3a_3p  {['PI > 70.62','GS > 57.55']}o número é definido pelos atributos diferentes
 #regra3a_4p ['PI > 42.09', 'LA > 39.63', 'GS > 37.89'] tem algo de errado com a regra, talvez ajude na modelagem
@@ -177,6 +177,11 @@ def patologia_solucao(arquivo, regra):
      )
   solution=(satisfiability_brute_force(final_formula))
   return solution
+
+def regras(solution):
+  for chave, valor in solution.items():
+    print(chave, valor)
+
  
 
 
