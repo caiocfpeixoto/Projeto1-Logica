@@ -308,31 +308,12 @@ def ret1(arquivo, m):
       for aux in range(3):
         list_aux = []
         if aux == 0:
-          list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
-          
-          
+          list_aux.append([var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])    
         if aux == 1:
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
-          list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
-            
+          list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])          
         if aux == 2:
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
-          list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
-          list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
-        
-        list = and_all(list_aux) 
-        list_atom.append(list)
-        
-      list = or_all(list_atom) 
-      list_atoms.append(list)
-
-    list = and_all(list_atoms)
-    list_row.append(list)  
-
-  return and_all(list_row)
+          list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
+  return list_aux
 ##############################################################################
 
 #restricão 2
@@ -375,21 +356,15 @@ def ret3(arquivo,regra):
 #(xP I≤42.09,4,p → ¬c4,2) ∧ (xP I≤70.62,4,p → ¬c4,2) ∧ (xP I≤80.61,4,p → ¬c4,2) ∧ (xGS≤37.89,4,p → ¬c4,2) ∧ (xGS≤57.55,4,p → ¬c4,2
 #restricão 4
 def ret4(arquivo,regra):
-    list_rows=[]
     for i in range(regra):
         for linha in range(len(arquivo.index)):
             list_atom=[]
             for coluna in range(len(arquivo.columns)-1):
                 if (arquivo.iloc[linha,coluna] == 1):
-                    list1 = (-var_pool.id('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'))
-                    list2 = (-var_pool.id('C'+str(i+1)+'_'+str(linha+1)))
-                    list_atom.append(list1 + list2) 
+                    list_atom.append([-var_pool.id('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'n'),-var_pool.id('C'+str(i+1)+'_'+str(linha+1))]) 
                 else:
-                    list1 = (-var_pool.id('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'))
-                    list2 = (-var_pool.id('C'+str(i+1)+'_'+str(linha+1)))
-                    list_atom.append( list1 + list2)
-                list_rows.append(list_atom)
-    return list_rows
+                    list_atom.append([-var_pool.id('X_'+ str(arquivo.columns[coluna])+'_'+str(i+1)+'_'+'p'),-var_pool.id('C'+str(i+1)+'_'+str(linha+1))])
+    return list_atom
 
 ##############################################################################
 #(c1,1 ∨ c2,1 ∨ c3,1 ∨ c4,1)
@@ -420,7 +395,8 @@ def pretty_formula_printer(formula):
 #Solução
 def patologia_solucao(arquivo,regra):
   print("Restrição 1: ")
-  #print(pretty_formula_printer(ret1(df.columns,m)))
+  print(ret1(df.columns,m))
+  print(pretty_formula_printer(ret1(df.columns,m)))
 
   print("Restrição 2: ")
   print(ret2(df.columns,m))
