@@ -294,7 +294,7 @@ def contagem(arquivo):
   return m   
 
 #(X_a_i_p) V (X_a_i_n) V (X_a_i_s)
-#df.columns é o se utiliza pra contar as chaves(ex=PI > x) das colunas
+#df.columns é o que se utiliza pra contar as chaves(ex=PI > x) das colunas
 
 ##############################################################################
 
@@ -304,15 +304,22 @@ def ret1(arquivo, m):
   for i in range(m):  
     list_atoms = []
     for a in (range(len(arquivo)-1)):
-      list_atom=[]
-      for aux in range(3):
-        list_aux = []
-        if aux == 0:
-          list_aux.append([var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])    
-        if aux == 1:
-          list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])          
-        if aux == 2:
-          list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
+        list_atom=[]
+        for aux in range(2):
+            list_aux = []
+            
+            if(aux == 1):
+                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        # for aux in range(3):
+            # list_aux = []
+        # if aux == 0:
+        #   list_aux.append([var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])    
+        # if aux == 1:
+        #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])          
+        # if aux == 2:
+        #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
   return list_aux
 ##############################################################################
 
