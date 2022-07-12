@@ -15,7 +15,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\USER\OneDrive\Documentos\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\Luciano\Desktop\Workspace\Python\Projeto I\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 from pysat.formula import CNF
 from pysat.formula import IDPool
 from pysat.solvers import Cadical
@@ -306,12 +306,36 @@ def ret1(arquivo, m):
     for a in (range(len(arquivo)-1)):
         list_atom=[]
         for aux in range(2):
-            list_aux = []
             
+            
+            if(aux == 0):
+                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+                
+                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+                
+                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+
             if(aux == 1):
                 list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
                 list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
                 list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+                
+                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+                
+                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+            
+        list_atom.append(list_aux)
+
         # for aux in range(3):
             # list_aux = []
         # if aux == 0:
@@ -320,7 +344,8 @@ def ret1(arquivo, m):
         #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])          
         # if aux == 2:
         #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
-  return list_aux
+  
+  return list_atom
 ##############################################################################
 
 #restricão 2
