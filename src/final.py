@@ -472,12 +472,12 @@ def pretty_formula_printer(formula):
 #Solução
 def patologia_solucao(arquivo,regra):
   print("Restrição 1: ")
-  print(ret1(df.columns,m))
-  print(pretty_formula_printer(ret1(df.columns,m)))
+  print(ret1(arquivo,m))
+  print(pretty_formula_printer(ret1(arquivo,m)))
 
   print("Restrição 2: ")
-  print(ret2(df.columns,m))
-  print(pretty_formula_printer(ret2(df.columns,m)))
+  print(ret2(arquivo,m))
+  print(pretty_formula_printer(ret2(arquivo,m)))
 
   print("Restrição 3: ")
   print(ret3(sem_patologia,m))
@@ -507,5 +507,5 @@ def patologia_solucao(arquivo,regra):
 
   print(solver_final.get_model())
 
-m = 2
+m = 1
 print(patologia_solucao(df.columns,m))
