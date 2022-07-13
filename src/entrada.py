@@ -72,7 +72,6 @@ def ret1(arquivo, regra):
           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
           
-          
         if aux == 1:
           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
@@ -82,11 +81,18 @@ def ret1(arquivo, regra):
           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
-        
+
         list = and_all(list_aux) 
         list_atom.append(list)
-        
-      list = or_all(list_atom) 
+
+      formula = Or(
+        Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'),Or(
+        Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'),
+      Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
+
+      list = or_all(list_atom)
+      list = And(formula, list) 
+
       list_atoms.append(list)
 
     list = and_all(list_atoms)
