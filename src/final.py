@@ -15,7 +15,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\Luciano\Desktop\Workspace\Python\Projeto I\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\USER\OneDrive\Documentos\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 from pysat.formula import CNF
 from pysat.formula import IDPool
 from pysat.solvers import Cadical
@@ -491,10 +491,8 @@ def patologia_solucao(arquivo,regra):
   print(ret5(com_patologia,m))
   print(pretty_formula_printer(ret5(com_patologia,m)))
 
-  print("Valoração:")
-
-  clauses1 = ret1(arquivo,regra)
-  clauses2 = ret2(arquivo,regra)
+  clauses1 = ret1(df.columns,regra)
+  clauses2 = ret2(df.columns,regra)
   clauses3 = ret3(sem_patologia,regra)
   clauses4 = ret4(com_patologia,regra)
   clauses5 = ret5(com_patologia,regra)
@@ -502,86 +500,12 @@ def patologia_solucao(arquivo,regra):
   cnf = CNF(from_clauses= clauses)
   print(len(cnf.clauses))
   print(cnf.nv)
+  print("Valoração:")
   solver_final = Cadical()
   solver_final.append_formula(cnf.clauses)
-  solver_final.solve()
+  print(solver_final.solve())
 
-  solver_final.get_model()
-#   final_formula= And(
-#         And(
-#             And(
-#                 ret1(arquivo,regra),
-#                 ret2(arquivo,regra)
-#             ),
-#             And(
-#                 ret3(sem_patologia,regra),
-#                 ret4(com_patologia,regra)
-#             ),
-#         ),
-#         ret5(com_patologia,regra)
-#     )
-#   solution=(satisfiability_brute_force(final_formula))
-    
-#   if solution:
-#     for i in range(len(arquivo)):
-#         for j in range(len(arquivo)):
-#             if arquivo[i][j] == str('0'):
-#                 for n in range(len(arquivo)):
-#                     if solution[str(i+1) + "_" + str(j+1) + "_" + str(i+1)]:
-#                         arquivo[i][j] = n + 1
-#     print(arquivo +'⇒'+ 'P')
-#   else:
-#     print("É insatisfatível")
+  print(solver_final.get_model())
 
-         
-
-#teste
-
-
-
-
-
-m = 1
+m = 2
 print(patologia_solucao(df.columns,m))
-
-#############################################################################
-
-# formula.append([-1,2])
-# formula.append([1,3])
-# formula.append([-2,-3])
-
-#############################################################################
-#formula1 = Atom('p')  # p
-#formula2 = Atom('q')  # q
-#formula3 = And(formula1, formula2)  # (p /\ q)
-#formula4 = And(Atom('p'), Atom('s'))  # (p /\ s)
-#formula5 = Not(And(Atom('p'), Atom('s')))  # (¬(p /\ s))
-#formula6 = Or(Not(And(Atom('p'), Atom('s'))), Atom('q'))  # ((¬(p /\ s)) v q)
-#formula7 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Atom('r')))  # ((¬(p /\ s)) -> (q /\ r))
-#formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('p'), Atom('s'))))) # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
-#formula9 = And(formula1, Not(formula1))
-
-#val={
-#        Atom('p'): True,
-#        Atom('q'): False
-#    }
-
-#Testes de funções 
-#for atom in atoms(formula1)
-#print(atom)
-#truth_value(my_formula,val)
-#satisfiability_brute_force(formula3)
-
-
-# with open('C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv', mode='r') as arq:
-#     leitor = csv.reader(arq,delimiter=',')
-#     linhas = 0
-#     for coluna in leitor:
-#        if linhas ==0:
-#            print(f'Coluna: {"".join(coluna)}')
-#            linhas +=1
-#        else:
-#            print('\tElemento {coluna[0]}')
-
-# csv = pd.reader_csv(r'C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv')
-#print(ret5(leitor,3))
