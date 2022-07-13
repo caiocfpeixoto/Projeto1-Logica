@@ -457,9 +457,23 @@ def regras(solution, m):
     list_regras.append(list_strings)    
 
   return list_regras
-
-
 m = 1
+
+print('Restrição 1:')
+print(ret1(df.columns,m))
+print('Restrição 2:')
+print(ret2(df.columns,m))
+print('Restrição 3:')
+print(ret3(sem_patologia,m))
+print('Restrição 4:')
+print(ret4(com_patologia,m))
+print('Restrição 5:')
+print(ret5(com_patologia,m))
+print('Solução: ')
 print(patologia_solucao(df.columns,m))
+
+sol = patologia_solucao(df.columns,m)
+print('Regra(s): ')
+print (regras(sol,m))
 
 #############################################################################
