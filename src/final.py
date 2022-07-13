@@ -346,6 +346,48 @@ def ret1(arquivo, m):
         #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
   
   return list_atom
+
+
+#def ret1(arquivo, regra):
+#list_row = []
+#   for i in range(regra):  
+#     list_atoms = []
+#     for a in (range(len(arquivo)-1)):
+#       list_atom=[]
+#       for aux in range(3):
+#         list_aux = []
+#         if aux == 0:
+#           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'))
+#           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
+#           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
+          
+#         if aux == 1:
+#           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
+#           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'))
+#           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
+            
+#         if aux == 2:
+#           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p')))
+#           list_aux.append(Not(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n')))
+#           list_aux.append(Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s'))
+
+#         list = and_all(list_aux) 
+#         list_atom.append(list)
+
+#       formula = Or(
+#         Atom('X_'+arquivo[a]+'_'+str(i+1)+'_p'),Or(
+#         Atom('X_'+arquivo[a]+'_'+str(i+1)+'_n'),
+#       Atom('X_'+arquivo[a]+'_'+str(i+1)+'_s')))
+
+#       list = or_all(list_atom)
+#       list = And(formula, list) 
+
+#       list_atoms.append(list)
+
+#     list = and_all(list_atoms)
+#     list_row.append(list)  
+
+#   return and_all(list_row)
 ##############################################################################
 
 #restricão 2
