@@ -35,4 +35,4 @@ import entrada
 
 sol = entrada.patologia_solucao(entrada.df, entrada.contagem(entrada.df.columns))
 
-print (entrada.regras(sol))
+print (entrada.regras(sol, entrada.contagem(entrada.df.columns)))

@@ -184,9 +184,42 @@ def patologia_solucao(arquivo, regra):
   solution=(satisfiability_brute_force(final_formula))
   return solution
 
-def regras(solution):
-  for chave, valor in solution.items():
-    print(chave, valor)
+def regras(solution, m):
+  list_regras = []
+  for i in range(m): 
+    list_strings = []
+    for chave, valor in solution.items():  
+      
+      # list_check = []
+      
+      # if chave[16:17] == 's' and valor == True and str(i + 1) in chave[13:16]:
+      #   print(chave, valor)  
+
+      if '_p' in chave and str(i + 1) in chave[13:16]:
+        if valor == True:
+          # print(chave[:-4])
+          list_strings.append(chave[:-4])
+        # else: 
+        #   aux = chave[:-4]
+        #   aux =  aux.replace('<=', '>')
+        #   print(aux)
+        #   list_strings.append(aux)
+
+      if '_n' in chave and str(i + 1) in chave[13:16]:
+        if valor == True:
+          aux = chave[:-4]
+          aux =  aux.replace('<=', '>')
+          # print(aux)
+          list_strings.append(aux)
+        # else:
+        #   aux = chave[:-4]
+        #   aux =  aux.replace('<=', '>')
+        #   print(aux)
+        #   list_strings.append(aux)
+
+    list_regras.append(list_strings)    
+
+  return list_regras
 
  
 
