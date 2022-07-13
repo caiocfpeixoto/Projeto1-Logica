@@ -15,7 +15,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\Luciano\Desktop\Workspace\Python\Projeto I\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\USER\OneDrive\Documentos\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 from pysat.formula import CNF
 from pysat.formula import IDPool
 from pysat.solvers import Cadical
@@ -471,41 +471,60 @@ def pretty_formula_printer(formula):
 
 #Solução
 def patologia_solucao(arquivo,regra):
-  print("Restrição 1: ")
-  print(ret1(df.columns,m))
-  pretty_formula_printer(ret1(df.columns,m))
+    print("Restrição 1: ")
+    print(ret1(df.columns,m))
+    pretty_formula_printer(ret1(df.columns,m))
 
-  print("Restrição 2: ")
-  print(ret2(df.columns,m))
-  pretty_formula_printer(ret2(df.columns,m))
+    print("Restrição 2: ")
+    print(ret2(df.columns,m))
+    pretty_formula_printer(ret2(df.columns,m))
 
-  print("Restrição 3: ")
-  print(ret3(sem_patologia,m))
-  pretty_formula_printer(ret3(sem_patologia,m))
+    print("Restrição 3: ")
+    print(ret3(sem_patologia,m))
+    pretty_formula_printer(ret3(sem_patologia,m))
 
-  print("Restrição 4: ")
-  print(ret4(com_patologia,m))
-  pretty_formula_printer(ret4(com_patologia,m))
+    print("Restrição 4: ")
+    print(ret4(com_patologia,m))
+    pretty_formula_printer(ret4(com_patologia,m))
 
-  print("Restrição 5: ")
-  print(ret5(com_patologia,m))
-  pretty_formula_printer(ret5(com_patologia,m))
+    print("Restrição 5: ")
+    print(ret5(com_patologia,m))
+    pretty_formula_printer(ret5(com_patologia,m))
+    
+    clauses1 = ret1(df.columns,regra)
+    clauses2 = ret2(df.columns,regra)
+    clauses3 = ret3(sem_patologia,regra)
+    clauses4 = ret4(com_patologia,regra)
+    clauses5 = ret5(com_patologia,regra)
+    clauses = clauses1 + clauses2 + clauses3 + clauses4 + clauses5
+    cnf = CNF(from_clauses= clauses)
+    print(len(cnf.clauses))
+    print(cnf.nv)
+    print("Valoração:")
+    solver_final = Cadical()
+    solver_final.append_formula(cnf.clauses)
+    print(solver_final.solve())
+    print(solver_final.get_model())
+    solution = solver_final.get_model()
+    if solver_final.solve():
+        list_regras = []
+        for i in range(m):
+            list_strings = []
+            for chave in solution:
+                if chave > 0:
+                    if '_p' in var_pool.obj(chave) and str(i + 1) in var_pool.obj(chave)[13:16]:
+                        list_strings.append(var_pool.obj(chave)[:-4])
 
-  clauses1 = ret1(df.columns,regra)
-  clauses2 = ret2(df.columns,regra)
-  clauses3 = ret3(sem_patologia,regra)
-  clauses4 = ret4(com_patologia,regra)
-  clauses5 = ret5(com_patologia,regra)
-  clauses = clauses1 + clauses2 + clauses3 + clauses4 + clauses5
-  cnf = CNF(from_clauses= clauses)
-  print(len(cnf.clauses))
-  print(cnf.nv)
-  print("Valoração:")
-  solver_final = Cadical()
-  solver_final.append_formula(cnf.clauses)
-  print(solver_final.solve())
+                    if '_n' in var_pool.obj(chave) and str(i + 1) in var_pool.obj(chave)[13:16]: 
+                        aux = var_pool.obj(chave)[:-4] 
+                        aux = aux.replace('<=', '>') 
+                        list_strings.append(aux)
 
-  print(solver_final.get_model())
+            list_regras.append(list_strings) 
+
+    return list_regras
+
 
 m = 1
 print(patologia_solucao(df.columns,m))
+
