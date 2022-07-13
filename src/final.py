@@ -15,7 +15,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\USER\OneDrive\Documentos\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
+df = pd.read_csv(r'C:\Users\Luciano\Desktop\Workspace\Python\Projeto I\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 from pysat.formula import CNF
 from pysat.formula import IDPool
 from pysat.solvers import Cadical
@@ -473,23 +473,23 @@ def pretty_formula_printer(formula):
 def patologia_solucao(arquivo,regra):
   print("Restrição 1: ")
   print(ret1(df.columns,m))
-  print(pretty_formula_printer(ret1(df.columns,m)))
+  pretty_formula_printer(ret1(df.columns,m))
 
   print("Restrição 2: ")
   print(ret2(df.columns,m))
-  print(pretty_formula_printer(ret2(df.columns,m)))
+  pretty_formula_printer(ret2(df.columns,m))
 
   print("Restrição 3: ")
   print(ret3(sem_patologia,m))
-  print(pretty_formula_printer(ret3(sem_patologia,m)))
+  pretty_formula_printer(ret3(sem_patologia,m))
 
   print("Restrição 4: ")
   print(ret4(com_patologia,m))
-  print(pretty_formula_printer(ret4(com_patologia,m)))
+  pretty_formula_printer(ret4(com_patologia,m))
 
   print("Restrição 5: ")
   print(ret5(com_patologia,m))
-  print(pretty_formula_printer(ret5(com_patologia,m)))
+  pretty_formula_printer(ret5(com_patologia,m))
 
   clauses1 = ret1(df.columns,regra)
   clauses2 = ret2(df.columns,regra)
@@ -507,5 +507,5 @@ def patologia_solucao(arquivo,regra):
 
   print(solver_final.get_model())
 
-m = 2
+m = 1
 print(patologia_solucao(df.columns,m))
