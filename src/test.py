@@ -14,7 +14,7 @@ from re import A
 import string
 import pandas as pd
 from xmlrpc.client import boolean
-df = pd.read_csv(r'C:\Users\cesar.peixoto\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_4p.csv') 
+df = pd.read_csv(r'C:\Users\USER\OneDrive\Documentos\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv') 
 
 
 sem_patologia=df[df["P"]!=1]  #pacientes sem patologia
@@ -403,79 +403,63 @@ def ret5(arquivo, regra):
 ##############################################################################
 
 #Solução
-def patologia_solucao(arquivo,regra):
-  print("Restrição 1: ")
-  print(ret1(df.columns,m))
-  print("Restrição 2: ")
-  print(ret2(df.columns,m))
-  print("Restrição 3: ")
-  print(ret3(sem_patologia,m))
-  print("Restrição 4: ")
-  print(ret4(com_patologia,m))
-  print("Restrição 5: ")
-  print(ret5(com_patologia,m))
-  print("Valoração:")
+def patologia_solucao(arquivo, regra):
+
   final_formula= And(
+    And(
         And(
-            And(
-                ret1(arquivo,regra),
-                ret2(arquivo,regra)
-            ),
-            And(
-                ret3(sem_patologia,regra),
-                ret4(com_patologia,regra)
-            ),
-        ),
-        ret5(com_patologia,regra)
-    )
+          ret1(arquivo,regra),
+          ret2(arquivo,regra)          
+          ),
+       And(
+           ret3(sem_patologia,regra),
+           ret4(com_patologia,regra)
+         ),
+          ),
+       ret5(com_patologia,regra)
+     )
   solution=(satisfiability_brute_force(final_formula))
- 
   return solution
 
+def regras(solution, m):
+  list_regras = []
+  for i in range(m): 
+    list_strings = []
+    for chave, valor in solution.items():  
+      
+      # list_check = []
+      
+      # if chave[16:17] == 's' and valor == True and str(i + 1) in chave[13:16]:
+      #   print(chave, valor)  
+
+      if '_p' in chave and str(i + 1) in chave[13:16]:
+        if valor == True:
+          # print(chave[:-4])
+          list_strings.append(chave[:-4])
+        # else: 
+        #   aux = chave[:-4]
+        #   aux =  aux.replace('<=', '>')
+        #   print(aux)
+        #   list_strings.append(aux)
+
+      if '_n' in chave and str(i + 1) in chave[13:16]:
+        if valor == True:
+          aux = chave[:-4]
+          aux =  aux.replace('<=', '>')
+          # print(aux)
+          list_strings.append(aux)
+        # else:
+        #   aux = chave[:-4]
+        #   aux =  aux.replace('<=', '>')
+        #   print(aux)
+        #   list_strings.append(aux)
+
+    list_regras.append(list_strings)    
+
+  return list_regras
 
 
-
-
-
-
-m = 2
+m = 1
 print(patologia_solucao(df.columns,m))
 
 #############################################################################
-
-
-#############################################################################
-#formula1 = Atom('p')  # p
-#formula2 = Atom('q')  # q
-#formula3 = And(formula1, formula2)  # (p /\ q)
-#formula4 = And(Atom('p'), Atom('s'))  # (p /\ s)
-#formula5 = Not(And(Atom('p'), Atom('s')))  # (¬(p /\ s))
-#formula6 = Or(Not(And(Atom('p'), Atom('s'))), Atom('q'))  # ((¬(p /\ s)) v q)
-#formula7 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Atom('r')))  # ((¬(p /\ s)) -> (q /\ r))
-#formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('p'), Atom('s'))))) # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
-#formula9 = And(formula1, Not(formula1))
-
-#val={
-#        Atom('p'): True,
-#        Atom('q'): False
-#    }
-
-#Testes de funções 
-#for atom in atoms(formula1)
-#print(atom)
-#truth_value(my_formula,val)
-#satisfiability_brute_force(formula3)
-
-
-# with open('C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv', mode='r') as arq:
-#     leitor = csv.reader(arq,delimiter=',')
-#     linhas = 0
-#     for coluna in leitor:
-#        if linhas ==0:
-#            print(f'Coluna: {"".join(coluna)}')
-#            linhas +=1
-#        else:
-#            print('\tElemento {coluna[0]}')
-
-# csv = pd.reader_csv(r'C:\Users\Caio\Documents\GitHub\Projeto1-Logica\Arquivos - Pacientes\column_bin_3a_2p.csv')
-#print(ret5(leitor,3))
