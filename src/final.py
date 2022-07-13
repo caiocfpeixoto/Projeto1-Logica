@@ -300,52 +300,55 @@ def contagem(arquivo):
 
 #restricão 1
 def ret1(arquivo, m):
-  list_row = []
-  for i in range(m):  
-    list_atoms = []
-    for a in (range(len(arquivo)-1)):
-        list_atom=[]
-        for aux in range(2):
+    list_row = []
+    for i in range(m):  
+        list_atoms = []
+        for a in (range(len(arquivo)-1)):
+            list_atom=[]
+        
+        # for aux in range(2):
+        #     list_aux = []
             
-            
-            if(aux == 0):
-                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        #     if(aux == 0):
+        #         list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
                 
-                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+        #         list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
                 
-                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+        #         list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
 
-            if(aux == 1):
-                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        #     if(aux == 1):
+        #         list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p')])
                 
-                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+        #         list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n')])
                 
-                list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
-                list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+        #         list_aux.append([var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_p'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_n'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
+        #         list_aux.append([-var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s'),var_pool.id('X_' + arquivo[a] + '_' + str(i + 1) + '_s')])
             
-        list_atom.append(list_aux)
+        # list_atom.append(list_aux)
+        
+            for aux in range(4):
+                list_aux = []
+                if aux == 0:
+                    list_row.append([var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])    
+                if aux == 1:
+                    list_row.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])          
+                if aux == 2:
+                    list_row.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
+                if aux == 3:
+                    list_row.append([var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])
 
-        # for aux in range(3):
-            # list_aux = []
-        # if aux == 0:
-        #   list_aux.append([var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])    
-        # if aux == 1:
-        #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')])          
-        # if aux == 2:
-        #   list_aux.append([-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_p'),-var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_n'),var_pool.id('X_'+arquivo[a]+'_'+str(i+1)+'_s')]) 
-  
-  return list_atom
+    return list_row
 
 
 #def ret1(arquivo, regra):
